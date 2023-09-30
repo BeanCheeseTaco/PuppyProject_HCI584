@@ -27,8 +27,6 @@ def add_new_record(file=myfile):
     weight = input("Input weight: ")
     comment = input("Input weight: ")
 
-    file = "doc folder\dutton.csv"
-
     # Define the user data as a list
     user_data = [input_date, weight, comment]
 
@@ -49,7 +47,6 @@ def add_new_record(file=myfile):
 def add_new_pet(PetID, file):
     """Information is entered by the user via keyboard and stores the new data in the csv file.
     For loop that will read through csv files and appends a new row. """
-
 
 #Plots csv file into plotly
 def plotcsv():
@@ -86,11 +83,10 @@ def updatedogprofile(PetID, PetProfile):
 def get_dogprofile(PetID, PetProfile):
     '''returns dog's profiles based on petID.'''
 
-
 #loads image
 def get_image():
     # load and show images
-    img = Image.open('doc folder\dogimage.jpg')
+    img = Image.open('doc folder\puppy1.jpg')
     # image parameters
     print(img.format, img.size, img.mode)
     display(img) # in jupyter, the image is shown as output
@@ -104,7 +100,7 @@ def get_image():
             print(row)
 '''
 
-# Calculates age     
+#Calculates age     
 def getAge(DOB = '01/04/2023', date_of_entry = '05/02/2023'):
     """Calculate the age based on all of the Date fields from the PetRecord.csv file and compares to the DOB field from the pets.csv file."""
 
@@ -114,25 +110,22 @@ def getAge(DOB = '01/04/2023', date_of_entry = '05/02/2023'):
     DOEutc_time = time.strptime(date_of_entry + ' 00:00:00', "%m/%d/%Y %H:%M:%S")
     DOEepoch_time = timegm(DOEutc_time)
 
-
-    # Calculate the age
-    #month = datetime.datetime.fromtimestamp(epoch_time).strftime('%m')
-    month = DOButc_time.tm_mon
-    day = DOButc_time.tm_mday
-    year = DOButc_time.tm_year
-
-    # Print the age
-    #print(f"The person is "  + str(epoch_time) + " years old.")
+    #Print the age
+    #Print(f"The person is "  + str(epoch_time) + " years old.")
     print("UTC " + str(DOButc_time))
-    print("Month " + str(month))
-    print("Day " + str(day))
-    print("Year " + str(year))
+    print("DOBepoch_time " + str(DOBepoch_time))
+    print("Month " + str(DOButc_time.tm_mon))
+    print("Day " + str(DOButc_time.tm_mday))
+    print("Year " + str(DOButc_time.tm_year))
 
-    # Calculate the age
-
-
+    #Calculate the age
+    age = DOEepoch_time - DOBepoch_time
+    print("Age " + str(age))
+    print("Days: " + str(age/(3600 * 24))) # ((60 seconds * 60 minutes) = 3600 * 24 hours)
+    print("Months: " + str(age/(60 * 60 * 24 * 30))) # (60 seconds * 60 minutes * 24 hours * 30 days)
+    print("Years: " + str(age/(3600 * 24 * 365))) # ((60 seconds * 60 minutes) = 3600 seconds * 24 hours * 365 days)
 
 #get_image()
-#add_new_record(myfile)
+add_new_record(myfile)
 load_file()
 getAge()
