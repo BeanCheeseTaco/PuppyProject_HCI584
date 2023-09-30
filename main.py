@@ -9,6 +9,7 @@ from PIL import Image
 import csv
 # import dutton.csv and import PetRecord.csv
 myfile = 'doc folder\dutton.csv'
+puppy_profile_file = 'doc folder\PuppyProfiles.csv'
 DOB = ''
 
 #Read file
@@ -44,10 +45,31 @@ def add_new_record(file=myfile):
         print(f"An error occurred: {e}")
 
 #Adds a new pet to file.
-def add_new_pet(PetID, file):
+def add_new_pet(file=puppy_profile_file):
     """Information is entered by the user via keyboard and stores the new data in the csv file.
     For loop that will read through csv files and appends a new row. """
+    """Information is entered by the user via keyboard and stores the new data in the csv file.
+    For loop that will read through csv files and appends a new row."""
+    pet_name = input("Input Pet's Name: ")
+    DOB = input("Input pet's Date of Birth: ")
+    breed = input("Input Breed: ")
+    image = input("Input Image: " )
 
+    # Define the user data as a list
+    user_data = [pet_name, DOB, breed, image]
+
+    try:
+        # Open the CSV file in append mode
+        with open(file, mode='a', newline='') as csvfile:
+            # Create a CSV writer
+            writer = csv.writer(csvfile)
+            
+            # Write the user data to the CSV file
+            writer.writerow(user_data)
+            
+        print("User data added successfully.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 #Plots csv file into plotly
 def plotcsv():
     '''Plots pet csv file based on PetID selected by user. '''
@@ -65,7 +87,12 @@ def Get_All_Info_For_Pet(PetID, PetData):
     '''Returns array with all info pertaining to petID (Parsed specific to the unique PetID.)'''
 
 #Returns every pet's record
-def Get_All_Info_For_All_Pets():
+def Get_All_Info_For_All_Pets(petProfile=puppy_profile_file):
+    with open(petProfile, 'r') as petProfile:
+        csv_reader = csv.reader(petProfile)
+        for row in csv_reader:
+            # Process each row here
+            print(row)
     '''Call Get_All_Unique_Pets() function
     Call Get_All_Info_For_Pet() function'''
 
@@ -112,20 +139,22 @@ def getAge(DOB = '01/04/2023', date_of_entry = '05/02/2023'):
 
     #Print the age
     #Print(f"The person is "  + str(epoch_time) + " years old.")
-    print("UTC " + str(DOButc_time))
-    print("DOBepoch_time " + str(DOBepoch_time))
-    print("Month " + str(DOButc_time.tm_mon))
-    print("Day " + str(DOButc_time.tm_mday))
-    print("Year " + str(DOButc_time.tm_year))
+    #print("UTC " + str(DOButc_time))
+    #print("DOBepoch_time " + str(DOBepoch_time))
+    #print("Month " + str(DOButc_time.tm_mon))
+    #print("Day " + str(DOButc_time.tm_mday))
+    #print("Year " + str(DOButc_time.tm_year))
 
     #Calculate the age
-    age = DOEepoch_time - DOBepoch_time
-    print("Age " + str(age))
+    age = DOEepoch_time - DOBepoch_time #Subtract the DateOfEntry = DateOfBirth
+    #print("Age " + str(age))
     print("Days: " + str(age/(3600 * 24))) # ((60 seconds * 60 minutes) = 3600 * 24 hours)
     print("Months: " + str(age/(60 * 60 * 24 * 30))) # (60 seconds * 60 minutes * 24 hours * 30 days)
     print("Years: " + str(age/(3600 * 24 * 365))) # ((60 seconds * 60 minutes) = 3600 seconds * 24 hours * 365 days)
 
-#get_image()
-add_new_record(myfile)
+get_image()
+#add_new_record(myfile)
 load_file()
-getAge()
+#getAge()
+Get_All_Info_For_All_Pets()
+#add_new_pet()
