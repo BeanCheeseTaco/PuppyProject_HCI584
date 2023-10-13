@@ -160,3 +160,13 @@ def display_UI():
 #Get_All_Profiles()
 #get_uniquedogprofile()
 #add_new_pet()
+
+
+# gets dog's profile based on PetID.
+def get_uniquedogprofile(pup=puppy_profile_file):
+    '''returns dog's profiles based on petID.'''
+    df = pd.read_csv(pup)
+    userSearch = input("What pet's profile do you want to see? \n1. Dutton \n2. Max  \n 3. Oliver? Press Enter.")
+
+    r = df["Weight"].loc[int(userSearch)]
+    print(r, "\n")
