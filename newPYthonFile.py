@@ -9,7 +9,7 @@ from calendar import timegm
 #from time import strftime
 import datetime
 from rapidfuzz import fuzz, process
-from PIL import Image
+from PIL import ImageTk, Image
 import csv
 import os
 duttontest = 'data\Dutton.csv'
@@ -39,6 +39,26 @@ class puppy_project(tk.Tk):
         self.text_widget = tk.Text(self, height=15, wrap="word") 
         self.text_widget.grid(row=1, column=0, columnspan=4, padx=10, pady=10)
 
+
+
+        mypic = Image.open("images/puppy1.jpg")
+        resized =  mypic.resize((200, 225)) #you should resize based on the aspect ratio / 2
+        self.myimage = ImageTk.PhotoImage(resized) 
+        self.img_label = Label(self, image=self.myimage)
+        #self.img_label.grid(row=10, column=5, padx=10, pady=10, sticky="ew")
+
+        self.picButton = Button(self, image=self.myimage, command=self.entries_page)
+        self.picButton.grid(row=11, column=6, padx=10, pady=10, sticky="ew")
+
+        '''
+                self.myimage = ImageTk.PhotoImage(resized) 
+        self.img_label = Label(self, image=self.myimage)
+        self.img_label.grid(row=10, column=5, padx=10, pady=10, sticky="ew")
+
+        picButton = Button(self, image=self.myimage, command=self.read_profile_file)
+        '''
+
+        
             
     def new_pet_page(self):
 
@@ -355,7 +375,7 @@ class puppy_project(tk.Tk):
         """
 
     #loads image from pet's individual csv file.
-    def get_individual_image():
+    def get_individual_image(self):
 
         df = read_pet_file_from_csv()
         r = input("What image do you want?")
@@ -374,7 +394,7 @@ class puppy_project(tk.Tk):
         display(img) # in jupyter, the image is shown as output """
 
     # gets dog's profile based on PetID.
-    def get_uniquedogprofile():
+    def get_uniquedogprofile(self):
         '''returns dog's profiles based on petID.'''
         
         df = read_profile_file()
@@ -383,7 +403,7 @@ class puppy_project(tk.Tk):
         r = df.loc[int(userSearch)]
         print(r, "\n")
 
-    def write_new_csv_file(pet_name): #create file
+    def write_new_csv_file(self, pet_name): #create file
         # Get user input for the file name and data
         folder_path = 'data'
         #pet_name = input("Enter the name of the new pet: ")
