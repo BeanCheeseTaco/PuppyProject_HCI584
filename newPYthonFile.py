@@ -39,23 +39,24 @@ class puppy_project(tk.Tk):
         self.text_widget = tk.Text(self, height=15, wrap="word") 
         self.text_widget.grid(row=1, column=0, columnspan=4, padx=10, pady=10)
 
-
-
         mypic = Image.open("images/puppy1.jpg")
         resized =  mypic.resize((200, 225)) #you should resize based on the aspect ratio / 2
         self.myimage = ImageTk.PhotoImage(resized) 
         self.img_label = Label(self, image=self.myimage)
         #self.img_label.grid(row=10, column=5, padx=10, pady=10, sticky="ew")
 
-        self.picButton = Button(self, image=self.myimage, command=self.entries_page)
+        self.picButton = Button(self, image=self.myimage, command=self.get_puppy_profile_image)
         self.picButton.grid(row=11, column=6, padx=10, pady=10, sticky="ew")
 
         '''
-                self.myimage = ImageTk.PhotoImage(resized) 
+        mypic = Image.open("images/puppy1.jpg")
+        resized =  mypic.resize((200, 225)) #you should resize based on the aspect ratio / 2
+        self.myimage = ImageTk.PhotoImage(resized) 
         self.img_label = Label(self, image=self.myimage)
-        self.img_label.grid(row=10, column=5, padx=10, pady=10, sticky="ew")
+        #self.img_label.grid(row=10, column=5, padx=10, pady=10, sticky="ew")
 
-        picButton = Button(self, image=self.myimage, command=self.read_profile_file)
+        self.picButton = Button(self, image=self.myimage, command=self.get_puppy_profile_image)
+        self.picButton.grid(row=11, column=6, padx=10, pady=10, sticky="ew")
         '''
 
         
@@ -361,11 +362,27 @@ class puppy_project(tk.Tk):
     def get_puppy_profile_image(self):
 
         r = input("What image do you want?")
-        pupImage = self.read_profile_file()["Profile Image"].loc[int(r)]
+        self.read_profile_file()
+        #print(self.df["Profile Image"].loc[int(r)])
+        pupImage = (self.df["Profile Image"].loc[int(r)])
+        #print(pupImage)
         # load and show images
-        img = Image.open(pupImage)
-        display(img) # in jupyter, the image is shown as output
+        #img = Image.open(pupImage)
+        #display(img) # in jupyter, the image is shown as output
         
+        img = Image.open(pupImage)
+        resized =  img.resize((200, 225)) #you should resize based on the aspect ratio / 2
+        self.myimage = ImageTk.PhotoImage(resized) 
+        self.img_label = Label(self, image=self.myimage)
+        #self.img_label.grid(row=10, column=5, padx=10, pady=10, sticky="ew")
+
+        self.picButton = Button(self, image=self.myimage, command=self.entries_page)
+        self.picButton.grid(row=11, column=6, padx=10, pady=10, sticky="ew")
+
+
+
+
+
         """
         r = input("What image do you want?")
         pupImage = read_profile_file()["Profile Image"].loc[int(r)]
