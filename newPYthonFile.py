@@ -25,14 +25,14 @@ class puppy_project(tk.Tk):
         self.search_button = tk.Button(self, text="Add New Pet", command=self.new_pet_page)
         self.search_button.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
 
-        self.search_button = tk.Button(self, text="Dutton", command=self.entries_page)
-        self.search_button.grid(row=0, column=2, padx=10, pady=10, sticky="ew")
+        #self.search_button = tk.Button(self, text="Dutton", command=self.entries_page)
+        #self.search_button.grid(row=0, column=2, padx=10, pady=10, sticky="ew")
 
-        self.search_button = tk.Button(self, text="Max", command=self.entries_page)
-        self.search_button.grid(row=0, column=3, padx=10, pady=10, sticky="ew")    
+        #self.search_button = tk.Button(self, text="Max", command=self.entries_page)
+        #self.search_button.grid(row=0, column=3, padx=10, pady=10, sticky="ew")    
 
-        self.search_button = tk.Button(self, text="TEST", command=self.read_profile_file)
-        self.search_button.grid(row=0, column=3, padx=10, pady=10, sticky="ew") 
+        #self.search_button = tk.Button(self, text="TEST", command=self.read_profile_file)
+        #self.search_button.grid(row=0, column=3, padx=10, pady=10, sticky="ew") 
 
         # Create a Text widget that spans all three columns and is 30 lines tall
         # wrap="word" to wrap on word boundaries only
@@ -361,29 +361,33 @@ class puppy_project(tk.Tk):
     #loads image for profile
     def get_puppy_profile_image(self):
 
-        r = input("What image do you want?")
         self.read_profile_file()
-        #print(self.df["Profile Image"].loc[int(r)])
-        pupImage = (self.df["Profile Image"].loc[int(r)])
-        #print(pupImage)
-        # load and show images
-        #img = Image.open(pupImage)
-        #display(img) # in jupyter, the image is shown as output
-        
-        img = Image.open(pupImage)
-        resized =  img.resize((200, 225)) #you should resize based on the aspect ratio / 2
-        self.myimage = ImageTk.PhotoImage(resized) 
-        self.img_label = Label(self, image=self.myimage)
-        #self.img_label.grid(row=10, column=5, padx=10, pady=10, sticky="ew")
+        # Create a list to store the loaded images
+        self.image_list = []
+        #pupImage = (self.df["Profile Image"].loc[int(r)])
+        #r = input("What image do you want?")
+        for x in range(0, len(self.df["Profile Image"])):
 
-        self.picButton = Button(self, image=self.myimage, command=self.entries_page)
-        self.picButton.grid(row=11, column=6, padx=10, pady=10, sticky="ew")
+            pupImage = (self.df["Profile Image"].loc[int(x)])
+            #print(pupImage)
+            img = Image.open(pupImage)
+            resized =  img.resize((200, 225)) #you should resize based on the aspect ratio / 2
+            self.image_list.append(ImageTk.PhotoImage(resized))
+            
+        for x in range(0, len(self.image_list)):
+            self.img_label = Label(self, image=self.image_list[x])
 
-
+            self.picButton = Button(self, image=self.image_list[x], command=self.entries_page)
+            self.picButton.grid(row=2, column=x, padx=10, pady=10, sticky="ew")    
 
 
 
         """
+        r = input("What image do you want?")
+        #print(self.df["Profile Image"].loc[int(r)])
+        pupImage = (self.df["Profile Image"].loc[int(r)])
+
+
         r = input("What image do you want?")
         pupImage = read_profile_file()["Profile Image"].loc[int(r)]
         # load and show images
