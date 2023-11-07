@@ -59,8 +59,13 @@ class puppy_project(tk.Tk):
         # wrap="word" to wrap on word boundaries only
         #self.text_widget = tk.Text(self, height=15, wrap="word") 
         #self.text_widget.grid(row=1, column=0, columnspan=4, padx=10, pady=10)
+<<<<<<< HEAD
 
 
+=======
+
+
+>>>>>>> main
         '''
         mypic = Image.open("images/puppy1.jpg")
         resized =  mypic.resize((200, 225)) #you should resize based on the aspect ratio / 2
