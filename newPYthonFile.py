@@ -81,7 +81,7 @@ class puppy_project(tk.Tk):
         self.picButton = Button(self, image=self.myimage, command=self.get_puppy_profile_image)
         self.picButton.grid(row=11, column=6, padx=10, pady=10, sticky="ew")
         '''
-
+ 
         
             
     def new_pet_page(self):
