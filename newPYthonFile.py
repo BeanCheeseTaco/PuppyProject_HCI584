@@ -59,13 +59,8 @@ class puppy_project(tk.Tk):
         # wrap="word" to wrap on word boundaries only
         #self.text_widget = tk.Text(self, height=15, wrap="word") 
         #self.text_widget.grid(row=1, column=0, columnspan=4, padx=10, pady=10)
-<<<<<<< HEAD
 
 
-=======
-
-
->>>>>>> main
         '''
         mypic = Image.open("images/puppy1.jpg")
         resized =  mypic.resize((200, 225)) #you should resize based on the aspect ratio / 2
@@ -88,75 +83,116 @@ class puppy_project(tk.Tk):
         '''
  
         
-            
+    #Adds a new pet to file.
+    def add_new_pet(self, file=puppy_profile_file):
+        
+        pet_name = self.pet_name_entry.get()
+        DOB = self.DOB_entry.get()
+        breed = self.pet_breed_entry.get()
+        #image = self.pet_image_label.get()
+        csvFile = self.write_new_csv_file(pet_name)
+        # Define the user data as a list
+        user_data = [pet_name, DOB, breed, csvFile]
+
+        try:
+            # Open the CSV file in append mode
+            with open(file, mode='a', newline='') as csvfile:
+                # Create a CSV writer
+                writer = csv.writer(csvfile)
+                
+                # Write the user data to the CSV file
+                writer.writerow(user_data)
+                
+            print("User data added successfully.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+
+            '''pet_ID = input("Input PetID:")
+            pet_name = input("Input Pet's Name: ")
+            DOB = input("Input pet's Date of Birth: ")
+            breed = input("Input Breed: ")
+            image = input("Input Image: " )
+            csvFile = write_new_csv_file(pet_name)
+            # Define the user data as a list
+            user_data = [pet_ID, pet_name, DOB, breed, image, csvFile]
+
+            try:
+                # Open the CSV file in append mode
+                with open(file, mode='a', newline='') as csvfile:
+                    # Create a CSV writer
+                    writer = csv.writer(csvfile)
+                    
+                    # Write the user data to the CSV file
+                    writer.writerow(user_data)
+                    
+                print("User data added successfully.")
+            except Exception as e:
+                print(f"An error occurred: {e}") ''' 
+
+
+
     def new_pet_page(self):
-
-        self.add_new_pet()
-
-        self.pet_name
-        self.DOB
-        self.breed
-        self.image
-        self.csvFile
-
+        
         self.pet_page=Toplevel()
         self.pet_page.title("Adding a New Pet")
-        #self.pet_page.geometry("500x500")
+        self.pet_page.geometry("500x500")
  
-        self.pet_page.label = tk.Label(self, text="Enter New Pet Details:", font=('Ariel', 10))
-        self.pet_page.label.grid(row=0, column=0, padx=10, pady=10, sticky="e")
-        self.pet_page.label.grid
+        self.pet_page_label = tk.Label(self, text="Enter New Pet Details:", font=('Ariel', 10))
+        self.pet_page_label.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+        self.pet_page_label.grid
        
         # Create a Label and place it on the left (column 0)
         #Label for Name:
-        self.pet_name.label = tk.Label(self, text="Pet's Name:") 
-        self.pet_name.label.grid(row=1, column=0, padx=10, pady=10, sticky="e")
-        self.pet_name.label.grid
+        self.pet_name_label = tk.Label(self, text="Pet's Name:") 
+        self.pet_name_label.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+        self.pet_name_label.grid
 
         # Create an Entry Widget with a specific width (e.g., 30 characters)
-        self.pet_name.entry = tk.Entry(self, width=30) #entry = textbox single line for text
-        self.pet_name.entry.grid(row=1, column=1, padx=10, pady=10, sticky="ew") 
+        self.pet_name_entry = tk.Entry(self, width=30) #entry = textbox single line for text
+        self.pet_name_entry.grid(row=1, column=1, padx=10, pady=10, sticky="ew") 
        
         #Label for DOB:
-        self.DOB.label = tk.Label(self, text="Date of Birth:")
-        self.DOB.label.grid(row=2, column=0, padx=10, pady=10, sticky="e")
-        self.DOB.label.grid
+        self.DOB_label = tk.Label(self, text="Date of Birth:")
+        self.DOB_label.grid(row=2, column=0, padx=10, pady=10, sticky="e")
+        self.DOB_label.grid
 
         # Create an Entry Widget with a specific width (e.g., 30 characters)
-        self.DOB.entry = tk.Entry(self, width=30) #entry = textbox single line for text
-        self.DOB.entry.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
+        self.DOB_entry = tk.Entry(self, width=30) #entry = textbox single line for text
+        self.DOB_entry.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
 
         #Label for Breed:
-        self.pet_breed.label = tk.Label(self, text="Pet's Breed:")
-        self.pet_breed.label.grid(row=3, column=0, padx=10, pady=10, sticky="e")
-        self.pet_breed.label.grid
+        self.pet_breed_label = tk.Label(self, text="Pet's Breed:")
+        self.pet_breed_label.grid(row=3, column=0, padx=10, pady=10, sticky="e")
+        #self.pet_breed_label.grid
 
         #Entry widget for Breed:
-        self.pet_breed.entry = tk.Entry(self, width=30)
-        self.pet_breed.entry.grid(row=3, column=1, padx=10, pady=10, sticky="ew")
+        self.pet_breed_entry = tk.Entry(self, width=30)
+        self.pet_breed_entry.grid(row=3, column=1, padx=10, pady=10, sticky="ew")
 
         #Label for Image:
-        self.pet_image.label = tk.Label(self, text="Upload Image:")
-        self.pet_image.label.grid(row=4, column=0, padx=10, pady=10, sticky="e")
-        self.pet_image.label.grid
+        #self.pet_image_label = tk.Label(self, text="SeLECT path:")
+        #self.pet_image_label.grid(row=4, column=0, padx=10, pady=10, sticky="e")
+        #self.pet_image_label.grid
 
         # Create button to upload image.
-        self.pet_image.btnOpen=Button(self, text="Upload Image")
-        self.pet_image.btnOpen.grid(row=4, column=1, padx=10, pady=10, sticky="ew")
+        #self.pet_image_btnOpen=Button(self, text="Upload Image")
+        #self.pet_image_btnOpen.grid(row=4, column=1, padx=10, pady=10, sticky="ew")
 
 
         # Create a Submit Button and place it on the right (column 2)
-        self.submit.btnOpen=Button(self, text="Submit", command=self.add_new_pet)
-        self.submit.btnOpen.grid(row=5, column=3, padx=10, pady=10, sticky="ew")    
+        self.submit_btnOpen=Button(self, text="Submit", command=self.add_new_pet)
+        self.submit_btnOpen.grid(row=5, column=3, padx=10, pady=10, sticky="ew")    
 
         #Buttons to Exit
-        self.pet_page.buttonClose=Button(self, text="Exit", command=self.pet_page.destroy)
-        self.pet_page.buttonClose.grid(row=6, column=3, padx=10, pady=10, sticky="ew") 
+        self.pet_page_buttonClose=Button(self, text="Exit", command=self.pet_page.destroy)
+        self.pet_page_buttonClose.grid(row=6, column=3, padx=10, pady=10, sticky="ew") 
 
         #Button to to back to home page
-        self.pet_page.btnOpen=Button(self, text="Go Home", command=self.weight_entries_page)
-        self.pet_page.btnOpen.grid(row=7, column=3, padx=10, pady=10, sticky="ew") 
-  
+        self.pet_page_btnOpen=Button(self, text="Go Home", command=self.weight_entries_page)
+        self.pet_page_btnOpen.grid(row=7, column=3, padx=10, pady=10, sticky="ew") 
+        
+
     def weight_entries_page(self):
         self.entries_page=Toplevel()
 
@@ -311,53 +347,6 @@ class puppy_project(tk.Tk):
             print("User data added successfully.")
         except Exception as e:
             print(f"An error occurred: {e}")
-
-    #Adds a new pet to file.
-    def add_new_pet(self, file=puppy_profile_file):
-        
-        pet_name = pet_name.get()
-        DOB = DOB.get()
-        breed = breed.get()
-        image = image.get()
-        csvFile = self.write_new_csv_file(pet_name)
-        # Define the user data as a list
-        user_data = [pet_name, DOB, breed, image, csvFile]
-
-        try:
-            # Open the CSV file in append mode
-            with open(file, mode='a', newline='') as csvfile:
-                # Create a CSV writer
-                writer = csv.writer(csvfile)
-                
-                # Write the user data to the CSV file
-                writer.writerow(user_data)
-                
-            print("User data added successfully.")
-        except Exception as e:
-            print(f"An error occurred: {e}")
-
-
-            '''pet_ID = input("Input PetID:")
-            pet_name = input("Input Pet's Name: ")
-            DOB = input("Input pet's Date of Birth: ")
-            breed = input("Input Breed: ")
-            image = input("Input Image: " )
-            csvFile = write_new_csv_file(pet_name)
-            # Define the user data as a list
-            user_data = [pet_ID, pet_name, DOB, breed, image, csvFile]
-
-            try:
-                # Open the CSV file in append mode
-                with open(file, mode='a', newline='') as csvfile:
-                    # Create a CSV writer
-                    writer = csv.writer(csvfile)
-                    
-                    # Write the user data to the CSV file
-                    writer.writerow(user_data)
-                    
-                print("User data added successfully.")
-            except Exception as e:
-                print(f"An error occurred: {e}") ''' 
 
     #Prints out individual pet's row records, e.g. an entry for a day
     def print_indvidual_entry_record(self):
