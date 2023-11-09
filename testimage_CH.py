@@ -15,8 +15,8 @@ with open('data\PuppyProfiles.csv', 'r', newline='') as csvfile:
     for row in csv_reader:
         image_path = row['Profile Image']
         image = Image.open(image_path)
-        resized =  image.resize((250, 255)) #you should resize based on the aspect ratio / 2
-        myimage = ImageTk.PhotoImage(resized)
+        image.thumbnail((250, 250), Image.LANCZOS) # Resize the image, keep aspect ratio, changes image infernally so no resized = here!
+        myimage = ImageTk.PhotoImage(image)
         image_list.append(myimage)
         
         
