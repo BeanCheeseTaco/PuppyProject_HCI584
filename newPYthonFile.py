@@ -19,13 +19,34 @@ DOB = ''
 class puppy_project(tk.Tk):
     def __init__(self):
         super().__init__()
+
+        self.homepage()
+        '''
+        self.read_profile_file()
+        # Create a list to store the loaded images
+        self.image_list = []
+        #pupImage = (self.df["Profile Image"].loc[int(r)])
+        #r = input("What image do you want?")
+        for x in range(0, len(self.df["Profile Image"])):
+
+            meow = (self.df["Profile Image"].loc[int(x)])
+            #print(pupImage)
+            img = Image.open(meow)
+            resized =  img.resize((280, 250)) #you should resize based on the aspect ratio / 2
+            self.image_list.append(ImageTk.PhotoImage(resized))
+            
+        for x in range(0, len(self.image_list)):
+            self.img_label = Label(self, image=self.image_list[x])
+
+            self.picButton = Button(self, image=self.image_list[x], command=self.weight_entries_page)
+            self.picButton.grid(row=2, column=x, padx=10, pady=10, sticky="ew")  '''
+
+    def homepage(self):
         self.title("Home Page")
 
         # Create a Start Search Button and place it on the right (column 2)
         self.search_button = tk.Button(self, text="Add New Pet", command=self.new_pet_page)
         self.search_button.grid(row=4, column=1, rowspan=20, padx=10, pady=10, sticky="ew")
-
-        
         self.read_profile_file()
         # Create a list to store the loaded images
         self.image_list = []
@@ -43,46 +64,14 @@ class puppy_project(tk.Tk):
             self.img_label = Label(self, image=self.image_list[x])
 
             self.picButton = Button(self, image=self.image_list[x], command=self.weight_entries_page)
-            self.picButton.grid(row=2, column=x, padx=10, pady=10, sticky="ew")    
-
-
-        #self.search_button = tk.Button(self, text="Dutton", command=self.entries_page)
-        #self.search_button.grid(row=0, column=2, padx=10, pady=10, sticky="ew")
-
-        #self.search_button = tk.Button(self, text="Max", command=self.entries_page)
-        #self.search_button.grid(row=0, column=3, padx=10, pady=10, sticky="ew")    
-
-        #self.search_button = tk.Button(self, text="TEST", command=self.read_profile_file)
-        #self.search_button.grid(row=0, column=3, padx=10, pady=10, sticky="ew") 
-
-        # Create a Text widget that spans all three columns and is 30 lines tall
-        # wrap="word" to wrap on word boundaries only
-        #self.text_widget = tk.Text(self, height=15, wrap="word") 
-        #self.text_widget.grid(row=1, column=0, columnspan=4, padx=10, pady=10)
-
-
-        '''
-        mypic = Image.open("images/puppy1.jpg")
-        resized =  mypic.resize((200, 225)) #you should resize based on the aspect ratio / 2
-        self.myimage = ImageTk.PhotoImage(resized) 
-        self.img_label = Label(self, image=self.myimage)
-        #self.img_label.grid(row=10, column=5, padx=10, pady=10, sticky="ew")
-
-        self.picButton = Button(self, image=self.myimage, command=self.get_puppy_profile_image)
-        self.picButton.grid(row=11, column=6, padx=10, pady=10, sticky="ew")
-
+            self.picButton.grid(row=2, column=x, padx=10, pady=10, sticky="ew")  
         
-        mypic = Image.open("images/puppy1.jpg")
-        resized =  mypic.resize((200, 225)) #you should resize based on the aspect ratio / 2
-        self.myimage = ImageTk.PhotoImage(resized) 
-        self.img_label = Label(self, image=self.myimage)
-        #self.img_label.grid(row=10, column=5, padx=10, pady=10, sticky="ew")
+            print("what is this")
+            self.meow = (self.df["csvFile"].loc[int(x)])
 
-        self.picButton = Button(self, image=self.myimage, command=self.get_puppy_profile_image)
-        self.picButton.grid(row=11, column=6, padx=10, pady=10, sticky="ew")
-        '''
- 
-        
+            print(self.meow)
+
+           
     #Adds a new pet to file.
     def add_new_pet(self, file=puppy_profile_file):
         
@@ -129,7 +118,6 @@ class puppy_project(tk.Tk):
                 print("User data added successfully.")
             except Exception as e:
                 print(f"An error occurred: {e}") ''' 
-
 
 
     def new_pet_page(self):
@@ -196,7 +184,7 @@ class puppy_project(tk.Tk):
     def weight_entries_page(self):
         self.entries_page=Toplevel()
 
-        self.read_profile_file()
+        #self.read_profile_file()
         #row = self.df.iloc[index]
         pupName = (self.df["Pets Name"].loc[int(1)])
 
@@ -248,92 +236,30 @@ class puppy_project(tk.Tk):
         self.entries_page.btnOpen=Button(self.entries_page, text="Add new pet record:", command=self.add_weight_record)
         self.entries_page.btnOpen.grid(row=5, column=0, padx=10, pady=10, sticky="ew")       
 
-    def add_weight_record(self):
-        self.new_weight=Toplevel()
-        self.new_weight.title("New Weight:")
-        self.new_weight.geometry("500x500")
-
-        self.new_weight.label = tk.Label(self.new_weight, text="Enter New Pet Details:", font=('Ariel', 10))
-        self.new_weight.label.grid(row=0, column=0, padx=10, pady=10, sticky="e")
-        self.new_weight.label.grid
-        # Create a Label and place it on the left (column 0)
-        #Label for Name:
-        self.new_weight.label = tk.Label(self.new_weight, text="Date of Entry:") 
-        self.new_weight.label.grid(row=1, column=0, padx=10, pady=10, sticky="e")
-        self.new_weight.label.grid
-
-        # Create an Entry Widget with a specific width (e.g., 30 characters)
-        self.new_weight.entry = tk.Entry(self.new_weight, width=30) #entry = textbox single line for text
-        self.new_weight.entry.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
-
-        #Label for DOB:
-        self.new_weight.label = tk.Label(self.new_weight, text="Weight:")
-        self.new_weight.label.grid(row=2, column=0, padx=10, pady=10, sticky="e")
-        self.new_weight.label.grid
-
-        # Create an Entry Widget with a specific width (e.g., 30 characters)
-        self.new_weight.entry = tk.Entry(self.new_weight, width=30) #entry = textbox single line for text
-        self.new_weight.entry.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
-
-        #Label for Image:
-        self.new_weight.label = tk.Label(self.new_weight, text="Upload Image:")
-        self.new_weight.label.grid(row=3, column=0, padx=10, pady=10, sticky="e")
-        self.new_weight.label.grid
-
-        # Create button to upload image.
-        self.new_weight.btnOpen=Button(self.new_weight, text="Upload Image", command=self.weight_entries_page)
-        self.new_weight.btnOpen.grid(row=3, column=1, padx=10, pady=10, sticky="ew")
-
-        #Label for Breed:
-        self.new_weight.label = tk.Label(self.new_weight, text="Comments:")
-        self.new_weight.label.grid(row=4, column=0, padx=10, pady=10, sticky="e")
-        self.new_weight.label.grid
-
-        #Entry widget for Breed:
-        self.new_weight.entry = tk.Entry(self.new_weight, width=30)
-        self.new_weight.entry.grid(row=4, column=1, padx=10, pady=10, sticky="ew")
-
-        # Create a Go Back Button and place it on the right (column 2)
-        self.new_weight.search_button = tk.Button(self.new_weight, text="Go Home:", command=self.my_homepage_function)
-        self.new_weight.search_button.grid(row=8, column=8, padx=5, pady=5, sticky="ew")    
-
-        #Buttons to Exit
-        self.new_weight.buttonClose=Button(self.new_weight, text="Exit", command=self.destroy)
-        self.new_weight.buttonClose.grid(row=6, column=3, padx=10, pady=10, sticky="ew")     
-    
     #Read PetProfile csv file
     def read_profile_file(self, petProfileCSV=puppy_profile_file):
 
         self.df = pd.read_csv(petProfileCSV)
         #self.text_widget.insert("end", f"The summary for {self.df}")
-
-    #Read CSV file from puppy profile
-    def read_pet_file_from_csv(self): 
-
-        read_profile_file()
-        #readFile = pd.read_csv(self.read_profile_file["csvFile"].loc[int(self.whichfile)])
-        self.readFile = pd.read_csv(self.df["csvFile"].loc[int(whichfile())])
-
     #Read csv file path location from puppy profile
+
     def read_path_location_from_csv(self):
 
-        read_profile_file()
-        self.pupCSVPath = self.df["csvFile"].loc[int(whichfile())]
+        self.read_profile_file()
+        self.pupCSVPath = self.df["csvFile"].loc[int(self.whichfile())]
 
-    def whichfile(self):
-        self.usersearch = input("Which profile would you like to review?")
-        #return int(usersearch)
 
     #Adds new row to file for new pet weight record
     def new_weight_record(self):
-        csv_file = read_path_location_from_csv()
 
-        input_date = input("Input Date: ")
-        weight = input("Input weight: ")
-        image = input("Select Image: ")
-        comment = input("Input comment: ")
+        csv_file = self.read_path_location_from_csv()
+
+        input_date = self.input_date_entry.get()
+        weight = self.weight_entry.get()
+        #image = self.image_entry.get()
+        comment = self.comment_entry.get()
         # Define the user data as a list
-        user_data = [input_date, weight, image, comment]
+        user_data = [input_date, weight, comment]
 
         try:
             # Open the CSV file in append mode
@@ -348,11 +274,92 @@ class puppy_project(tk.Tk):
         except Exception as e:
             print(f"An error occurred: {e}")
 
+    def add_weight_record(self):
+
+        self.new_weight_record()
+        self.new_weight=Toplevel()
+        self.new_weight.title("New Weight:")
+        self.new_weight.geometry("500x500")
+
+        self.new_weight.label = tk.Label(self.new_weight, text="Enter New Pet Details:", font=('Ariel', 10))
+        self.new_weight.label.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+        self.new_weight.label.grid
+        # Create a Label and place it on the left (column 0)
+        #Label for Name:
+        self.input_date_entry.label = tk.Label(self, text="Date of Entry:") 
+        self.input_date_entry.label.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+        self.input_date_entry.label.grid
+
+        # Create an Entry Widget with a specific width (e.g., 30 characters)
+        self.input_date_entry.entry = tk.Entry(self, width=30) #entry = textbox single line for text
+        self.input_date_entry.entry.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
+
+        #Label for DOB:
+        self.weight_entry.label = tk.Label(self, text="Weight:")
+        self.weight_entry.label.grid(row=2, column=0, padx=10, pady=10, sticky="e")
+        self.weight_entry.label.grid
+
+        # Create an Entry Widget with a specific width (e.g., 30 characters)
+        self.weight_entry.entry = tk.Entry(self, width=30) #entry = textbox single line for text
+        self.weight_entry.entry.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
+
+        #Label for Image:
+        #self.new_weight.label = tk.Label(self.new_weight, text="Upload Image:")
+        #self.new_weight.label.grid(row=3, column=0, padx=10, pady=10, sticky="e")
+        #self.new_weight.label.grid
+
+        # Create button to upload image.
+        #self.new_weight.btnOpen=Button(self.new_weight, text="Upload Image", command=self.weight_entries_page)
+        #self.new_weight.btnOpen.grid(row=3, column=1, padx=10, pady=10, sticky="ew")
+
+        #Label for Breed:
+        self.comment_entry.label = tk.Label(self, text="Comments:")
+        self.comment_entry.label.grid(row=4, column=0, padx=10, pady=10, sticky="e")
+        self.comment_entry.label.grid
+
+        #Entry widget for Breed:
+        self.comment_entry.entry = tk.Entry(self, width=30)
+        self.comment_entry.entry.grid(row=4, column=1, padx=10, pady=10, sticky="ew")
+
+        # Create a Go Back Button and place it on the right (column 2)
+        self.new_weight.search_button = tk.Button(self, text="Go Home:", command=self.my_homepage_function)
+        self.new_weight.search_button.grid(row=8, column=8, padx=5, pady=5, sticky="ew")    
+
+        #Buttons to Exit
+        self.new_weight.buttonClose=Button(self, text="Exit", command=self.destroy)
+        self.new_weight.buttonClose.grid(row=6, column=3, padx=10, pady=10, sticky="ew")     
+    
+
+    #Read CSV file from puppy profile
+    def read_pet_file_from_csv(self): 
+
+        self.read_profile_file()
+        #readFile = pd.read_csv(self.read_profile_file["csvFile"].loc[int(self.whichfile)])
+        self.readFile = pd.read_csv(self.df["csvFile"].loc[int(meow)])
+
+    def whichfile(self):
+        btn1= tk.Button(self, text="Button1" ,command= lambda:
+        print("Button 1"))
+        btn1.pack(pady=10)
+        btn2= tk.Button(self, text="Button2" ,command= lambda:
+        print("Button 2"))
+        btn2.pack(pady=10)
+        btn3= tk.Button(self, text="Button3" ,command= lambda:
+        print("Button 3"))
+        btn3.pack(pady=10)
+                
+        #self.whichrecord = (self.df["csvFile"].loc[int(x)])
+
+        #self.usersearch = input("Which profile would you like to review?")
+
+        #self.usersearch = input("Which profile would you like to review?")
+        #return int(usersearch)
+
     #Prints out individual pet's row records, e.g. an entry for a day
     def print_indvidual_entry_record(self):
         
 
-        df = read_pet_file_from_csv()
+        df = self.read_pet_file_from_csv()
         userSearch = input("What record do you want to return?")
         r = df.loc[int(userSearch)]
         print(r, "\n")
@@ -363,7 +370,7 @@ class puppy_project(tk.Tk):
         self.df = self.read_pet_file_from_csv()
         userSearch = input("What weight do you wan to return?")
 
-        r = df["Weight"].loc[int(userSearch)]
+        r = self.df["Weight"].loc[int(userSearch)]
         #self.text_widget.insert("end", "found something \n\n")
 
         #weight = df["Weight"].loc[r]
@@ -375,14 +382,14 @@ class puppy_project(tk.Tk):
         """Calculate the age based on all of the Date fields from the PetRecord.csv file and compares to the DOB field from the pets.csv file."""
 
         #read dateofEntry for weight
-        dr = read_pet_file_from_csv()
+        dr = self.read_pet_file_from_csv()
         r = input("What weight do you want?")
         date_of_entry = dr["DateofEntry"].loc[int(r)]
         print("Date of Entry selected: " + r)
         print({date_of_entry})  
 
         #read DOB from PetProfile
-        df = read_profile_file()
+        df = self.read_profile_file()
         DOB = df["Date of Birth"].loc[int(r)]
         name = df["Pets Name"].loc[int(r)]
         print("Name:" + name)
@@ -408,6 +415,7 @@ class puppy_project(tk.Tk):
         print("Days: " + str(age/(3600 * 24))) # ((60 seconds * 60 minutes) = 3600 * 24 hours)
         print("Months: " + str(age/(60 * 60 * 24 * 30))) # (60 seconds * 60 minutes * 24 hours * 30 days)
         print("Years: " + str(age/(3600 * 24 * 365))) # ((60 seconds * 60 minutes) = 3600 seconds * 24 hours * 365 days)
+
 
     #loads image for profile
     def get_puppy_profile_image(self):
@@ -449,7 +457,7 @@ class puppy_project(tk.Tk):
     #loads image from pet's individual csv file.
     def get_individual_image(self):
 
-        df = read_pet_file_from_csv()
+        df = self.read_pet_file_from_csv()
         r = input("What image do you want?")
         pupImage = df["Image"].loc[int(r)]
         # load and show images
@@ -469,7 +477,7 @@ class puppy_project(tk.Tk):
     def get_uniquedogprofile(self):
         '''returns dog's profiles based on petID.'''
         
-        df = read_profile_file()
+        df = self.read_profile_file()
         userSearch = input("What pet's profile do you want to see?")
 
         r = df.loc[int(userSearch)]
@@ -513,7 +521,7 @@ class puppy_project(tk.Tk):
 
     # Delete row from weight file
     def delete_weight_row_from_file(self):
-        csv_file = read_path_location_from_csv()
+        csv_file = self.read_path_location_from_csv()
         df = pd.read_csv(csv_file)
 
         # Prompt the user for the criteria to identify the row to be deleted
@@ -540,10 +548,10 @@ class puppy_project(tk.Tk):
             print(f"CSV file '{csv_file}' does not exist.")
 
     #Plots csv file into plotly
-    def plotcsv():
+    def plotcsv(self):
         '''Plots pet csv file based on PetID selected by user. '''
         # Read the CSV file into a DataFrame
-        csv_file = read_pet_file_from_csv()
+        csv_file = self.read_pet_file_from_csv()
 
         # Extract X and Y data
         x = csv_file['DateofEntry']
