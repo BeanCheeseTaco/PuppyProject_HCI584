@@ -158,20 +158,7 @@ class puppy_project(tk.Tk):
         self.pet_page_btnOpen.grid(row=7, column=3, padx=10, pady=10, sticky="ew") 
         
     #loads image for profile
-    def get_puppy_profile_image(self):
 
-        self.image_list = []
-
-        pupImage = (self.df["Profile Image"].loc[int(self.clickedyou)])
-
-        img = Image.open(pupImage)
-        resized =  img.resize((300, 300)) #you should resize based on the aspect ratio / 2
-        self.image_list.append(ImageTk.PhotoImage(resized))
-
-        self.entries_page = tk.Label(self.entries_page, image=self.image_list)
-        self.entries_page.grid(row=10, column=9, padx=10, pady=10, sticky="ne")
-        self.entries_page.grid
-        
 
     def add_weight_page(self):
         self.new_weight=Toplevel()
@@ -234,8 +221,31 @@ class puppy_project(tk.Tk):
         self.entries_page.title("Entries for pet: " + pupName)
         self.entries_page.geometry("800x800")
         
+        #Label for Profile:
+        self.entries_page.label = tk.Label(self.entries_page, text='About pupName')
+        self.entries_page.label.grid(row=0, column=8, padx=10, pady=10, sticky="e")
+        self.entries_page.label.grid
+
         self.get_puppy_profile_image()
-        #Area for Graph:
+
+        # Create an Entry Widget with a specific width (e.g., 30 characters)
+        self.entries_page.search_button = tk.Button(self.entries_page, text="Edit Profile:", width=2, command=self.new_pet_page)
+        self.entries_page.search_button.grid(row=2, column=8, padx=10, pady=10, sticky="ew")  
+
+        # Create an Entry Widget with a specific width (e.g., 30 characters)
+        self.entries_page.btnOpen=Button(self.entries_page, text="Add new weight record:", command=self.add_weight_page)
+        self.entries_page.btnOpen.grid(row=4, column=0, padx=10, pady=10, sticky="ew")  
+
+        #Tiles for Previous records:
+        self.entries_page.label = tk.Label(self.entries_page, text="Previous weight records: ")
+        self.entries_page.label.grid(row=5, column=0, padx=10, pady=10, sticky="e")
+        self.entries_page.label.grid
+
+        #Buttons to Exit
+        self.entries_page.buttonClose=Button(self.entries_page, text="Exit", command=self.entries_page.destroy)
+        self.entries_page.buttonClose.grid(row=8, column=8, padx=10, pady=10, sticky="ew")         
+
+        '''#Area for Graph:
         self.entries_page.label = tk.Label(self.entries_page, text="Graph:", font=('Arial', 18))
         self.entries_page.label.grid(row=0, column=0, padx=10, pady=10, sticky="e")
         self.entries_page.label.grid
@@ -247,26 +257,15 @@ class puppy_project(tk.Tk):
         self.entries_page.label.grid
 
         #Label for Profile:
-        self.entries_page.label = tk.Label(self.entries_page, text="Profile Info:")
-        self.entries_page.label.grid(row=1, column=8, padx=20, pady=20, sticky="e")
+        self.entries_page.label = tk.Label(self.entries_page, text='About ' + pupName':')
+        self.entries_page.label.grid(row=0, column=8, padx=20, pady=20, sticky="e")
         self.entries_page.label.grid
 
-        #Tiles for Previous records:
-        self.entries_page.label = tk.Label(self.entries_page, text="Previous weight records: ")
-        self.entries_page.label.grid(row=4, column=0, padx=10, pady=10, sticky="e")
-        self.entries_page.label.grid
 
         #Display Previous records:
         self.entries_page.text_widget = tk.Text(self.entries_page, height=15, wrap="word") 
         self.entries_page.text_widget.grid(row=4, column=6, columnspan=4, padx=10, pady=10)
 
-        # Create an Entry Widget with a specific width (e.g., 30 characters)
-        self.entries_page.search_button = tk.Button(self.entries_page, text="Edit Profile:", width=2, command=self.new_pet_page)
-        self.entries_page.search_button.grid(row=2, column=8, padx=10, pady=10, sticky="ew")  
-
-        # Create a Go Back Button and place it on the right (column 2)
-        self.entries_page.btnOpen = tk.Button(self.entries_page, text="Go Home:", command=self.homepage)
-        self.entries_page.btnOpen.grid(row=8, column=8, padx=5, pady=5, sticky="ew")    
 
         #Buttons to Exit
         self.entries_page.buttonClose=Button(self.entries_page, text="Exit", command=self.entries_page.destroy)
@@ -274,12 +273,21 @@ class puppy_project(tk.Tk):
 
         # Create an Entry Widget with a specific width (e.g., 30 characters)
         self.entries_page.label = tk.Label(self.entries_page, text="Read Profile Test:")
-        self.entries_page.label.grid(row=11, column=8, padx=10, pady=10, sticky="ew")  
+        self.entries_page.label.grid(row=11, column=8, padx=10, pady=10, sticky="ew") ''' 
+     
+    def get_puppy_profile_image(self):
 
-        # Create an Entry Widget with a specific width (e.g., 30 characters)
-        self.entries_page.btnOpen=Button(self.entries_page, text="Add new weight record:", command=self.add_weight_page)
-        self.entries_page.btnOpen.grid(row=5, column=0, padx=10, pady=10, sticky="ew")       
-        
+        self.new_image_list = []
+
+        puppyImage = (self.df["Profile Image"].loc[int(self.clickedyou)])
+
+        img = Image.open(puppyImage)
+        resized =  img.resize((325, 300)) #you should resize based on the aspect ratio / 2
+        self.new_image_list.append(ImageTk.PhotoImage(resized))
+
+        self.entries_page .label = tk.Label(self.entries_page, image=self.new_image_list)
+        self.entries_page.label.grid(row=1, column=8, padx=10, pady=10, sticky="e")
+        self.entries_page.label.grid
 
     #Read PetProfile csv file
     def read_profile_file(self, petProfileCSV=puppy_profile_file):
