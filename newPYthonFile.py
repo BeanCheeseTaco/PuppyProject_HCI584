@@ -157,6 +157,21 @@ class puppy_project(tk.Tk):
         self.pet_page_btnOpen=Button(self, text="Go Home", command=self.weight_entries_page)
         self.pet_page_btnOpen.grid(row=7, column=3, padx=10, pady=10, sticky="ew") 
         
+    #loads image for profile
+    def get_puppy_profile_image(self):
+
+        self.image_list = []
+
+        pupImage = (self.df["Profile Image"].loc[int(self.clickedyou)])
+
+        img = Image.open(pupImage)
+        resized =  img.resize((300, 300)) #you should resize based on the aspect ratio / 2
+        self.image_list.append(ImageTk.PhotoImage(resized))
+
+        self.entries_page = tk.Label(self.entries_page, image=self.image_list)
+        self.entries_page.grid(row=10, column=9, padx=10, pady=10, sticky="ne")
+        self.entries_page.grid
+        
 
     def add_weight_page(self):
         self.new_weight=Toplevel()
@@ -213,14 +228,13 @@ class puppy_project(tk.Tk):
 
     def weight_entries_page(self):
         self.entries_page=Toplevel()
-        self.get_puppy_profile_image()
-        #self.read_profile_file()
-        #row = self.df.iloc[index]
+
         pupName = (self.df["Pets Name"].loc[int(self.clickedyou)])
 
         self.entries_page.title("Entries for pet: " + pupName)
         self.entries_page.geometry("800x800")
-
+        
+        self.get_puppy_profile_image()
         #Area for Graph:
         self.entries_page.label = tk.Label(self.entries_page, text="Graph:", font=('Arial', 18))
         self.entries_page.label.grid(row=0, column=0, padx=10, pady=10, sticky="e")
@@ -265,6 +279,7 @@ class puppy_project(tk.Tk):
         # Create an Entry Widget with a specific width (e.g., 30 characters)
         self.entries_page.btnOpen=Button(self.entries_page, text="Add new weight record:", command=self.add_weight_page)
         self.entries_page.btnOpen.grid(row=5, column=0, padx=10, pady=10, sticky="ew")       
+        
 
     #Read PetProfile csv file
     def read_profile_file(self, petProfileCSV=puppy_profile_file):
@@ -377,24 +392,6 @@ class puppy_project(tk.Tk):
         print("Months: " + str(age/(60 * 60 * 24 * 30))) # (60 seconds * 60 minutes * 24 hours * 30 days)
         print("Years: " + str(age/(3600 * 24 * 365))) # ((60 seconds * 60 minutes) = 3600 seconds * 24 hours * 365 days)
 
-
-    #loads image for profile
-    def get_puppy_profile_image(self):
-
-        self.read_profile_file()
-
-        pupImage = (self.df["Profile Image"].loc[int(self.clickedyou)])
-        #self.img_label = Label(self, image=self.image_list[x])
-
-        #self.picButton = Button(self, image=pupImage, command=self.entries_page)
-        #self.picButton.grid(row=10, column=10, padx=10, pady=10, sticky="ew")  
-            #print(pupImage)
-
-
-        img = Image.open(pupImage)
-        resized =  img.resize((280, 250)) #you should resize based on the aspect ratio / 2
-        self.image_list.append(ImageTk.PhotoImage(resized))
-        self.img_label = Label(self, image=self.image_list[int(pupImage)])
 
     #loads image from pet's individual csv file.
     def get_individual_image(self):
