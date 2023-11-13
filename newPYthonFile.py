@@ -132,6 +132,32 @@ class puppy_project(tk.Tk):
         self.pet_page_btnOpen=Button(self.pet_page, text="Go Home", command=self.weight_entries_page)
         self.pet_page_btnOpen.grid(row=7, column=3, padx=10, pady=10, sticky="ew") 
 
+    # gets dog's profile based on PetID.
+    def get_uniquedogprofile(self):
+        '''returns dog's profiles based on petID.'''
+        self.new_profile_list = []
+
+        puppyName = (self.df["Pets Name"].loc[int(self.clickedyou)])
+        puppyDOB = (self.df["Date of Birth"].loc[int(self.clickedyou)])
+        Breed = (self.df["Breed"].loc[int(self.clickedyou)])
+
+        #img = Image.open(puppyImage)
+        #resized =  img.resize((325, 300)) #you should resize based on the aspect ratio / 2
+        self.new_profile_list.append(puppyName)
+
+        self.entries_page .label = tk.Label(self.entries_page, text='Name: ' + puppyName)
+        self.entries_page.label.grid(row=1, column=10, padx=10, pady=10, sticky="e")
+        self.entries_page.label.grid
+
+        self.entries_page .label = tk.Label(self.entries_page, text='Date of Birth: ' + puppyDOB)
+        self.entries_page.label.grid(row=2, column=10, padx=10, pady=10, sticky="e")
+        self.entries_page.label.grid
+
+        self.entries_page .label = tk.Label(self.entries_page, text='Breed: ' + Breed)
+        self.entries_page.label.grid(row=3, column=10, padx=10, pady=10, sticky="e")
+        self.entries_page.label.grid    
+        #self.entries_page .label = tk.Label(self.entries_page, text='Name: ' + puppyName + '\n Date of Birth: ' + puppyDOB + '\n Breed: ' + Breed)
+
     def weight_entries_page(self):
         self.entries_page=Toplevel()
         self.read_path_location_from_csv()
@@ -139,17 +165,18 @@ class puppy_project(tk.Tk):
 
         self.entries_page.title("Entries for pet: " + pupName)
         self.entries_page.geometry("800x800")
+        self.get_uniquedogprofile()
         
         #Label for Profile:
-        self.entries_page.label = tk.Label(self.entries_page, text='About pupName')
-        self.entries_page.label.grid(row=0, column=8, padx=10, pady=10, sticky="e")
-        self.entries_page.label.grid
+        #self.entries_page.label = tk.Label(self.entries_page, text='About ' + pupName)
+        #self.entries_page.label.grid(row=0, column=8, padx=10, pady=10, sticky="e")
+        #self.entries_page.label.grid
 
         self.get_puppy_profile_image()
 
         # Create an Entry Widget with a specific width (e.g., 30 characters)
         self.entries_page.search_button = tk.Button(self.entries_page, text="Edit Profile:", width=2, command=self.new_pet_page)
-        self.entries_page.search_button.grid(row=2, column=8, padx=10, pady=10, sticky="ew")  
+        self.entries_page.search_button.grid(row=5, column=10, padx=10, pady=10, sticky="ew")  
 
         # Create an Entry Widget with a specific width (e.g., 30 characters)
         self.entries_page.btnOpen=Button(self.entries_page, text="Add new weight record:", command=self.add_weight_page)
@@ -162,37 +189,8 @@ class puppy_project(tk.Tk):
 
         #Buttons to Exit
         self.entries_page.buttonClose=Button(self.entries_page, text="Exit", command=self.entries_page.destroy)
-        self.entries_page.buttonClose.grid(row=8, column=8, padx=10, pady=10, sticky="ew")         
-
-        '''#Area for Graph:
-        self.entries_page.label = tk.Label(self.entries_page, text="Graph:", font=('Arial', 18))
-        self.entries_page.label.grid(row=0, column=0, padx=10, pady=10, sticky="e")
-        self.entries_page.label.grid
-        # Create a Label and place it on the left (column 0)
-
-        #textbox for user to type in text
-        self.entries_page.label = tk.Entry(self.entries_page, font=('Arial', 16))
-        self.entries_page.label.grid(row=8, column=8, padx=10, pady=10, sticky="e")
-        self.entries_page.label.grid
-
-        #Label for Profile:
-        self.entries_page.label = tk.Label(self.entries_page, text='About ' + pupName':')
-        self.entries_page.label.grid(row=0, column=8, padx=20, pady=20, sticky="e")
-        self.entries_page.label.grid
-
-
-        #Display Previous records:
-        self.entries_page.text_widget = tk.Text(self.entries_page, height=15, wrap="word") 
-        self.entries_page.text_widget.grid(row=4, column=6, columnspan=4, padx=10, pady=10)
-
-
-        #Buttons to Exit
-        self.entries_page.buttonClose=Button(self.entries_page, text="Exit", command=self.entries_page.destroy)
-        self.entries_page.buttonClose.grid(row=10, column=8, padx=10, pady=10, sticky="ew") 
-
-        # Create an Entry Widget with a specific width (e.g., 30 characters)
-        self.entries_page.label = tk.Label(self.entries_page, text="Read Profile Test:")
-        self.entries_page.label.grid(row=11, column=8, padx=10, pady=10, sticky="ew") ''' 
+        self.entries_page.buttonClose.grid(row=8, column=10, padx=10, pady=10, sticky="ew")         
+        
      
     def get_puppy_profile_image(self):
 
@@ -205,7 +203,7 @@ class puppy_project(tk.Tk):
         self.new_image_list.append(ImageTk.PhotoImage(resized))
 
         self.entries_page .label = tk.Label(self.entries_page, image=self.new_image_list)
-        self.entries_page.label.grid(row=1, column=8, padx=10, pady=10, sticky="e")
+        self.entries_page.label.grid(row=0, column=10, padx=10, pady=10, sticky="e")
         self.entries_page.label.grid
 
     #Read PetProfile csv file
@@ -224,8 +222,7 @@ class puppy_project(tk.Tk):
     def new_weight_record(self):
         
         pet_csv_file = self.pupCSVPath
-        print("From newweight")
-        print(pet_csv_file)
+
         input_date = self.input_date_entry.get()
         weight = self.weight_entry.get()
         #image = self.image_entry.get()
@@ -247,7 +244,7 @@ class puppy_project(tk.Tk):
             print(f"An error occurred: {e}")
     
     def add_weight_page(self):
-        self.new_weight_record()
+        #self.new_weight_record()
         self.new_weight=Toplevel()
         self.new_weight.title("New Weight:")
         self.new_weight.geometry("500x500")
@@ -383,7 +380,7 @@ class puppy_project(tk.Tk):
     def get_individual_image(self):
 
         df = self.read_pet_file_from_csv()
-        r = input("What image do you want?")
+        #r = input("What image do you want?")
         pupImage = df["Image"].loc[self.clickedyou]
         # load and show images
         img = Image.open(pupImage)
@@ -398,15 +395,6 @@ class puppy_project(tk.Tk):
         img = Image.open(pupImage)
         display(img) # in jupyter, the image is shown as output """
 
-    # gets dog's profile based on PetID.
-    def get_uniquedogprofile(self):
-        '''returns dog's profiles based on petID.'''
-        
-        df = self.read_profile_file()
-        userSearch = input("What pet's profile do you want to see?")
-
-        r = df.loc[int(userSearch)]
-        print(r, "\n")
 
     def write_new_csv_file(self, pet_name): #create file
         # Get user input for the file name and data
