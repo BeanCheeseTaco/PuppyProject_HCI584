@@ -135,30 +135,34 @@ class puppy_project(tk.Tk):
     # gets dog's profile based on PetID.
     def get_uniquedogprofile(self):
         '''returns dog's profiles based on petID.'''
-        self.new_profile_list = []
 
         puppyName = (self.df["Pets Name"].loc[int(self.clickedyou)])
         puppyDOB = (self.df["Date of Birth"].loc[int(self.clickedyou)])
         Breed = (self.df["Breed"].loc[int(self.clickedyou)])
 
-        #img = Image.open(puppyImage)
-        #resized =  img.resize((325, 300)) #you should resize based on the aspect ratio / 2
-        self.new_profile_list.append(puppyName)
-
-        self.entries_page .label = tk.Label(self.entries_page, text='Name: ' + puppyName)
+        self.entries_page.label = tk.Label(self.entries_page, text='Profile:')
         self.entries_page.label.grid(row=1, column=10, padx=10, pady=10, sticky="e")
         self.entries_page.label.grid
 
-        self.entries_page .label = tk.Label(self.entries_page, text='Date of Birth: ' + puppyDOB)
+        self.entries_page.label = tk.Label(self.entries_page, text='Name: ' + puppyName)
         self.entries_page.label.grid(row=2, column=10, padx=10, pady=10, sticky="e")
         self.entries_page.label.grid
 
-        self.entries_page .label = tk.Label(self.entries_page, text='Breed: ' + Breed)
+        self.entries_page.label = tk.Label(self.entries_page, text='Date of Birth: ' + puppyDOB)
         self.entries_page.label.grid(row=3, column=10, padx=10, pady=10, sticky="e")
+        self.entries_page.label.grid
+
+        #self.entries_page .label = tk.Label(self.entries_page, text='Current Age: ' + self.getAge())
+        #self.entries_page.label.grid(row=4, column=10, padx=10, pady=10, sticky="e")
+        #self.entries_page.label.grid   
+
+        self.entries_page.label = tk.Label(self.entries_page, text='Breed: ' + Breed)
+        self.entries_page.label.grid(row=4, column=10, padx=10, pady=10, sticky="e")
         self.entries_page.label.grid    
         #self.entries_page .label = tk.Label(self.entries_page, text='Name: ' + puppyName + '\n Date of Birth: ' + puppyDOB + '\n Breed: ' + Breed)
 
     def weight_entries_page(self):
+
         self.entries_page=Toplevel()
         self.read_path_location_from_csv()
         pupName = (self.df["Pets Name"].loc[int(self.clickedyou)])
@@ -187,9 +191,11 @@ class puppy_project(tk.Tk):
         self.entries_page.label.grid(row=5, column=0, padx=10, pady=10, sticky="e")
         self.entries_page.label.grid
 
+        self.print_indvidual_entry_record() 
+
         #Buttons to Exit
         self.entries_page.buttonClose=Button(self.entries_page, text="Exit", command=self.entries_page.destroy)
-        self.entries_page.buttonClose.grid(row=8, column=10, padx=10, pady=10, sticky="ew")         
+        self.entries_page.buttonClose.grid(row=10, column=10, padx=10, pady=10, sticky="ew")         
         
      
     def get_puppy_profile_image(self):
@@ -211,7 +217,7 @@ class puppy_project(tk.Tk):
 
         self.df = pd.read_csv(petProfileCSV)
         #self.text_widget.insert("end", f"The summary for {self.df}")
-    #Read csv file path location from puppy profile
+        #Read csv file path location from puppy profile
 
     def read_path_location_from_csv(self):
 
@@ -302,11 +308,14 @@ class puppy_project(tk.Tk):
         self.new_weight.buttonClose.grid(row=6, column=3, padx=10, pady=10, sticky="ew")
 
     #Read CSV file from puppy profile
-    def read_pet_file_from_csv(self): 
+    def read_pet_file_from_csv(self):  #***********************Not working. should just use read_path_location_from_csv
 
-        self.read_profile_file()
+        #self.read_profile_file()
         #readFile = pd.read_csv(self.read_profile_file["csvFile"].loc[int(self.whichfile)])
         self.readFile = pd.read_csv(self.df["csvFile"].loc[int(self.clickedyou)])
+        print("TESTING THIS")
+        selected_row = self.df.iloc[int(0)]
+        print(selected_row)
 
     def whichfile(self, button_id):
 
@@ -316,25 +325,57 @@ class puppy_project(tk.Tk):
 
     #Prints out individual pet's row records, e.g. an entry for a day
     def print_indvidual_entry_record(self):
-        
-
-        df = self.read_pet_file_from_csv()
+        self.read_pet_file_from_csv()
+        drr = self.pupCSVPath
+        print("*********************lets TEST*********************************")
+        print(self.pupCSVPath) #reads csv file path
         userSearch = input("What record do you want to return?")
-        r = df.loc[int(userSearch)]
+        r = drr.loc[int(userSearch)]
         print(r, "\n")
+
+        '''self.drr = self.readFile
+        print("Print self.drr..........................")
+        print({self.readFile})
+        #date_of_entry = self.drr["Weight"].loc[int(1)]
+        #print({date_of_entry}) 
+
+        print("Printing...................")
+        print(self.drr)
+        
+        for xx in range(0, len(self.drr["DateofEntry"])):
+                       
+            dateofEntryRecord = (self.drr["DateofEntry"].loc[int(xx)])
+            weightRecord = (self.drr["Weight"].loc[int(xx)])
+            comment = (self.drr["Comment"].loc[int(xx)])
+
+            self.entries_page.label = tk.Label(self.entries_page, text='Date of Entry Record:' + dateofEntryRecord)
+            self.entries_page.label.grid(row=6, column=xx, padx=10, pady=10, sticky="e")
+            self.entries_page.label.grid
+
+            self.entries_page.label = tk.Label(self.entries_page, text='Weight Record: ' + weightRecord)
+            self.entries_page.label.grid(row=7, column=xx, padx=10, pady=10, sticky="e")
+            self.entries_page.label.grid    
+
+            self.entries_page.label = tk.Label(self.entries_page, text='Comment: ' + comment)
+            self.entries_page.label.grid(row=8, column=xx, padx=10, pady=10, sticky="e")
+            self.entries_page.label.grid
+
+            df = self.read_pet_file_from_csv()
+            userSearch = input("What record do you want to return?")
+            r = df.loc[int(userSearch)]
+            print(r, "\n")'''
 
     #Returns individual pet's weight records
     def print_weight_record_for_individual():
 
-        self.df = self.read_pet_file_from_csv()
+        self.doo = self.read_pet_file_from_csv()
         userSearch = input("What weight do you wan to return?")
 
-        r = self.df["Weight"].loc[int(userSearch)]
+        roo = self.doo["Weight"].loc[int(userSearch)]
         #self.text_widget.insert("end", "found something \n\n")
 
         #weight = df["Weight"].loc[r]
         #print({weight})
-        prself.clickedyou
 
     #Calculates age
     def getAge(self): #DOB = '01/05/2023', , date_of_entry = '05/02/2023'
