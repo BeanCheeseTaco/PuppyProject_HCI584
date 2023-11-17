@@ -135,7 +135,7 @@ class puppy_project(tk.Tk):
     # gets dog's profile based on PetID.
     def get_uniquedogprofile(self):
         '''returns dog's profiles based on petID.'''
-
+        
         puppyName = (self.df["Pets Name"].loc[int(self.clickedyou)])
         puppyDOB = (self.df["Date of Birth"].loc[int(self.clickedyou)])
         Breed = (self.df["Breed"].loc[int(self.clickedyou)])
@@ -169,14 +169,14 @@ class puppy_project(tk.Tk):
 
         self.entries_page.title("Entries for pet: " + pupName)
         self.entries_page.geometry("800x800")
-        self.get_uniquedogprofile()
+        self.get_uniquedogprofile() #display's dog's profile
         
         #Label for Profile:
         #self.entries_page.label = tk.Label(self.entries_page, text='About ' + pupName)
         #self.entries_page.label.grid(row=0, column=8, padx=10, pady=10, sticky="e")
         #self.entries_page.label.grid
 
-        self.get_puppy_profile_image()
+        self.get_puppy_profile_image() # get's profile's image
 
         # Create an Entry Widget with a specific width (e.g., 30 characters)
         self.entries_page.search_button = tk.Button(self.entries_page, text="Edit Profile:", width=2, command=self.new_pet_page)
@@ -197,7 +197,6 @@ class puppy_project(tk.Tk):
         self.entries_page.buttonClose=Button(self.entries_page, text="Exit", command=self.entries_page.destroy)
         self.entries_page.buttonClose.grid(row=10, column=10, padx=10, pady=10, sticky="ew")         
         
-     
     def get_puppy_profile_image(self):
 
         self.new_image_list = []
@@ -218,11 +217,6 @@ class puppy_project(tk.Tk):
         self.df = pd.read_csv(petProfileCSV)
         #self.text_widget.insert("end", f"The summary for {self.df}")
         #Read csv file path location from puppy profile
-
-    def read_path_location_from_csv(self):
-
-        #self.read_profile_file()
-        self.pupCSVPath = (self.df["csvFile"].loc[int(self.clickedyou)])
 
     #Adds new row to file for new pet weight record
     def new_weight_record(self):
@@ -307,65 +301,53 @@ class puppy_project(tk.Tk):
         self.new_weight.buttonClose=Button(self.new_weight, text="Exit", command=self.destroy)
         self.new_weight.buttonClose.grid(row=6, column=3, padx=10, pady=10, sticky="ew")
 
-    #Read CSV file from puppy profile
-    def read_pet_file_from_csv(self):  #***********************Not working. should just use read_path_location_from_csv
+    def read_path_location_from_csv(self):
 
         #self.read_profile_file()
-        #readFile = pd.read_csv(self.read_profile_file["csvFile"].loc[int(self.whichfile)])
-        self.readFile = pd.read_csv(self.df["csvFile"].loc[int(self.clickedyou)])
-        print("TESTING THIS")
-        selected_row = self.df.iloc[int(0)]
-        print(selected_row)
+        self.pupCSVPath = (self.df["csvFile"].loc[int(self.clickedyou)])
 
     def whichfile(self, button_id):
 
-            self.clickedyou = button_id
-            #print(self.clickedyou)
-            self.weight_entries_page()
+        self.clickedyou = button_id
+        #print(self.clickedyou)
+        self.weight_entries_page()
+
+    #Read CSV file from puppy profile
+    def read_pet_file_from_csv(self):  
+
+        #self.read_profile_file()
+        #readFile = pd.read_csv(self.read_profile_file["csvFile"].loc[int(self.whichfile)]
+        self.readFile = pd.read_csv(self.df["csvFile"].loc[int(self.clickedyou)])
+        self.selected_row = self.readFile.iloc[int(self.clickedyou)] #this is the row of weight record
 
     #Prints out individual pet's row records, e.g. an entry for a day
     def print_indvidual_entry_record(self):
         self.read_pet_file_from_csv()
-        drr = self.pupCSVPath
-        print("*********************lets TEST*********************************")
-        print(self.pupCSVPath) #reads csv file path
-        userSearch = input("What record do you want to return?")
-        r = drr.loc[int(userSearch)]
-        print(r, "\n")
 
-        '''self.drr = self.readFile
-        print("Print self.drr..........................")
-        print({self.readFile})
-        #date_of_entry = self.drr["Weight"].loc[int(1)]
-        #print({date_of_entry}) 
-
-        print("Printing...................")
-        print(self.drr)
-        
-        for xx in range(0, len(self.drr["DateofEntry"])):
+        for x in range(len(self.readFile)):
                        
-            dateofEntryRecord = (self.drr["DateofEntry"].loc[int(xx)])
-            weightRecord = (self.drr["Weight"].loc[int(xx)])
-            comment = (self.drr["Comment"].loc[int(xx)])
+            dateofEntryRecord = (self.readFile["DateofEntry"].iloc[int(x)])
+            weightRecord = (self.readFile["Weight"].iloc[int(x)])
+            comment = (self.readFile["Comment"].iloc[int(x)])
 
             self.entries_page.label = tk.Label(self.entries_page, text='Date of Entry Record:' + dateofEntryRecord)
-            self.entries_page.label.grid(row=6, column=xx, padx=10, pady=10, sticky="e")
+            self.entries_page.label.grid(row=6, column=x, padx=10, pady=10, sticky="e")
             self.entries_page.label.grid
 
-            self.entries_page.label = tk.Label(self.entries_page, text='Weight Record: ' + weightRecord)
-            self.entries_page.label.grid(row=7, column=xx, padx=10, pady=10, sticky="e")
+            self.entries_page.label = tk.Label(self.entries_page, text='Weight Record: ' + str(weightRecord))
+            self.entries_page.label.grid(row=7, column=x, padx=10, pady=10, sticky="e")
             self.entries_page.label.grid    
 
             self.entries_page.label = tk.Label(self.entries_page, text='Comment: ' + comment)
-            self.entries_page.label.grid(row=8, column=xx, padx=10, pady=10, sticky="e")
+            self.entries_page.label.grid(row=8, column=x, padx=10, pady=10, sticky="e")
             self.entries_page.label.grid
 
-            df = self.read_pet_file_from_csv()
+            '''df = self.read_pet_file_from_csv()
             userSearch = input("What record do you want to return?")
             r = df.loc[int(userSearch)]
             print(r, "\n")'''
 
-    #Returns individual pet's weight records
+    #Returns individual pet's weight COLUMN ONLY records
     def print_weight_record_for_individual():
 
         self.doo = self.read_pet_file_from_csv()
@@ -425,8 +407,9 @@ class puppy_project(tk.Tk):
         pupImage = df["Image"].loc[self.clickedyou]
         # load and show images
         img = Image.open(pupImage)
-        display(img) # in jupyter, the image is shown as output   
-
+        display(pupImage) # in jupyter, the image is shown as output   
+        print("WTF IS HAPPENING?")
+        #print(pupImage)
         """    read_pet_file_from_csv()
         csv_file=petFile[fileIndex]
         df = pd.read_csv(csv_file)
