@@ -2,4 +2,3 @@ Pets Name,Date of Birth,Breed,Profile Image,csvFile
 Dutton,2/24/2023,Schnauzer,images\puppy1.jpg,data\Dutton.csv
 Max,5/18/2021,Poodle,images\puppy3.jpg,data\Max.csv
 Oliver,12/6/2022,St. Bernard,images\puppy4.jpg,data\Oliver.csv
-Buddy,8/9/2023,Chewbaca,images\puppy5.jpg,data\Oliver.csv

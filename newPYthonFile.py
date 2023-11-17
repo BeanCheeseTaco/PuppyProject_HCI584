@@ -1,4 +1,5 @@
 #!pip3 install pillow
+#pip install pyimage
 import tkinter as tk 
 from tkinter import *
 import matplotlib.pyplot as plt
@@ -31,7 +32,7 @@ class puppy_project(tk.Tk):
         self.read_profile_file()
         # Create a list to store the loaded images
         self.image_list = []
-        self.result =[]
+        #self.result =[]
 
         for x in range(0, len(self.df["Profile Image"])):
 
@@ -207,7 +208,7 @@ class puppy_project(tk.Tk):
         resized =  img.resize((325, 300)) #you should resize based on the aspect ratio / 2
         self.new_image_list.append(ImageTk.PhotoImage(resized))
 
-        self.entries_page .label = tk.Label(self.entries_page, image=self.new_image_list)
+        self.entries_page.label = tk.Label(self.entries_page, image=self.new_image_list)
         self.entries_page.label.grid(row=0, column=10, padx=10, pady=10, sticky="e")
         self.entries_page.label.grid
 
@@ -324,28 +325,34 @@ class puppy_project(tk.Tk):
     def print_indvidual_entry_record(self):
         self.read_pet_file_from_csv()
 
+        self.weightImage = []
+
         for x in range(len(self.readFile)):
                        
-            dateofEntryRecord = (self.readFile["DateofEntry"].iloc[int(x)])
-            weightRecord = (self.readFile["Weight"].iloc[int(x)])
-            comment = (self.readFile["Comment"].iloc[int(x)])
+            weightpuppyImage = (self.readFile["Image"].loc[(int(x))])           
+            dateofEntryRecord = (self.readFile["DateofEntry"].loc[x])
+            weightRecord = (self.readFile["Weight"].loc[x])
+            comment = (self.readFile["Comment"].loc[x])
 
-            self.entries_page.label = tk.Label(self.entries_page, text='Date of Entry Record:' + dateofEntryRecord)
+            myimg = Image.open(weightpuppyImage)
+            imgresized =  myimg.resize((150, 200)) #you should resize based on the aspect ratio / 2
+            self.weightImage.append(ImageTk.PhotoImage(imgresized))
+
+            self.entries_page.label = tk.Label(self.entries_page, image=self.weightImage[x])
             self.entries_page.label.grid(row=6, column=x, padx=10, pady=10, sticky="e")
             self.entries_page.label.grid
 
-            self.entries_page.label = tk.Label(self.entries_page, text='Weight Record: ' + str(weightRecord))
+            self.entries_page.label = tk.Label(self.entries_page, text='Date of Entry:' + dateofEntryRecord)
             self.entries_page.label.grid(row=7, column=x, padx=10, pady=10, sticky="e")
+            self.entries_page.label.grid
+
+            self.entries_page.label = tk.Label(self.entries_page, text='Weight Record: ' + str(weightRecord))
+            self.entries_page.label.grid(row=8, column=x, padx=10, pady=10, sticky="e")
             self.entries_page.label.grid    
 
             self.entries_page.label = tk.Label(self.entries_page, text='Comment: ' + comment)
-            self.entries_page.label.grid(row=8, column=x, padx=10, pady=10, sticky="e")
+            self.entries_page.label.grid(row=9, column=x, padx=10, pady=10, sticky="e")
             self.entries_page.label.grid
-
-            '''df = self.read_pet_file_from_csv()
-            userSearch = input("What record do you want to return?")
-            r = df.loc[int(userSearch)]
-            print(r, "\n")'''
 
     #Returns individual pet's weight COLUMN ONLY records
     def print_weight_record_for_individual():
@@ -410,14 +417,8 @@ class puppy_project(tk.Tk):
         display(pupImage) # in jupyter, the image is shown as output   
         print("WTF IS HAPPENING?")
         #print(pupImage)
-        """    read_pet_file_from_csv()
-        csv_file=petFile[fileIndex]
-        df = pd.read_csv(csv_file)
-        r = input("What image do you want?")
-        pupImage = df["Image"].loc[self.clickedyou]
-        # load and show images
-        img = Image.open(pupImage)
-        display(img) # in jupyter, the image is shown as output """
+
+
 
 
     def write_new_csv_file(self, pet_name): #create file
