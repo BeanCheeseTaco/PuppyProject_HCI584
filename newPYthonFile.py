@@ -1,6 +1,7 @@
 #!pip3 install pillow
 #pip install pyimage
 import tkinter as tk 
+from tkinter import ttk
 from tkinter import *
 import matplotlib.pyplot as plt
 import numpy as np
@@ -8,12 +9,11 @@ import pandas as pd
 import time
 from calendar import timegm
 #from time import strftime
-import datetime
+from datetime import date
 from rapidfuzz import fuzz, process
 from PIL import ImageTk, Image
 import csv
 import os
-duttontest = 'data\Dutton.csv'
 puppy_profile_file = 'data\PuppyProfiles.csv'
 DOB = ''
 
@@ -25,11 +25,15 @@ class puppy_project(tk.Tk):
 
     def homepage(self):
         self.title("Home Page")
-
+        #self.delete_pet_row_from_file()
         # Create a Start Search Button and place it on the right (column 2)
         self.search_button = tk.Button(self, text="Add New Pet", command=self.new_pet_page)
         self.search_button.grid(row=4, column=1, rowspan=20, padx=10, pady=10, sticky="ew")
-        self.read_profile_file()
+        #delete pet
+        self.search_button = tk.Button(self, text="Delete pet", command=self.delete_pet_page)
+        self.search_button.grid(row=4, column=2, rowspan=20, padx=10, pady=10, sticky="ew")
+
+        self.read_pet_profile_file()
         # Create a list to store the loaded images
         self.image_list = []
         #self.result =[]
@@ -37,7 +41,7 @@ class puppy_project(tk.Tk):
         for x in range(0, len(self.df["Profile Image"])):
 
             pupImage = (self.df["Profile Image"].loc[int(x)])
-
+            self.puppyProfileName = (self.df["Pets Name"].loc[int(x)])
 
             img = Image.open(pupImage)
             resized =  img.resize((280, 250)) #you should resize based on the aspect ratio / 2
@@ -133,10 +137,42 @@ class puppy_project(tk.Tk):
         self.pet_page_btnOpen=Button(self.pet_page, text="Go Home", command=self.weight_entries_page)
         self.pet_page_btnOpen.grid(row=7, column=3, padx=10, pady=10, sticky="ew") 
 
-    # gets dog's profile based on PetID.
+    def delete_pet_page(self):
+        
+        self.delete_pet=Toplevel()
+        self.delete_pet.title("Delete a Pet")
+        self.delete_pet.geometry("500x500")
+ 
+        self.delete_pet_label = tk.Label(self.delete_pet, text="Delete a Pet:", font=('Ariel', 10))
+        self.delete_pet_label.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+        self.delete_pet_label.grid
+       
+        # Create a Label and place it on the left (column 0)
+        #Label for Name:
+        self.delete_pet_label = tk.Label(self.delete_pet, text="Pet's Name:") 
+        self.delete_pet_label.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+        self.delete_pet_label.grid
+
+     # Extract the column values from the DataFrame
+        options = self.df['Pets Name'].tolist()
+        optionID = self.df['PetID'].tolist()
+        
+
+        self.row_combobox = ttk.Combobox(self.delete_pet, values=options, state='readonly')
+        self.row_combobox.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
+        
+        #self.selected_value = self.row_combobox.get()
+
+        # Create a button to update the label
+        self.update_button = tk.Button(self.delete_pet, text="DELETE PET", command=self.delete_pet_row_from_file)
+        self.update_button.grid(row=3, column=1, padx=10, pady=10, sticky="ew") 
+
+        #self.selected_value = self.row_combobox.get()
+       
+    # gets dog's profile based on PetID. (Gets dog's profile)
     def get_uniquedogprofile(self):
         '''returns dog's profiles based on petID.'''
-        
+        self.getAgeforProfileInfo()
         puppyName = (self.df["Pets Name"].loc[int(self.clickedyou)])
         puppyDOB = (self.df["Date of Birth"].loc[int(self.clickedyou)])
         Breed = (self.df["Breed"].loc[int(self.clickedyou)])
@@ -153,12 +189,12 @@ class puppy_project(tk.Tk):
         self.entries_page.label.grid(row=3, column=10, padx=10, pady=10, sticky="e")
         self.entries_page.label.grid
 
-        #self.entries_page .label = tk.Label(self.entries_page, text='Current Age: ' + self.getAge())
-        #self.entries_page.label.grid(row=4, column=10, padx=10, pady=10, sticky="e")
-        #self.entries_page.label.grid   
+        self.entries_page.label = tk.Label(self.entries_page, text='Current Age: ' + str(self.ageInMonths) + " months")
+        self.entries_page.label.grid(row=4, column=10, padx=10, pady=10, sticky="e")
+        self.entries_page.label.grid
 
         self.entries_page.label = tk.Label(self.entries_page, text='Breed: ' + Breed)
-        self.entries_page.label.grid(row=4, column=10, padx=10, pady=10, sticky="e")
+        self.entries_page.label.grid(row=5, column=10, padx=10, pady=10, sticky="e")
         self.entries_page.label.grid    
         #self.entries_page .label = tk.Label(self.entries_page, text='Name: ' + puppyName + '\n Date of Birth: ' + puppyDOB + '\n Breed: ' + Breed)
 
@@ -213,11 +249,9 @@ class puppy_project(tk.Tk):
         self.entries_page.label.grid
 
     #Read PetProfile csv file
-    def read_profile_file(self, petProfileCSV=puppy_profile_file):
+    def read_pet_profile_file(self, petProfileCSV=puppy_profile_file):
 
         self.df = pd.read_csv(petProfileCSV)
-        #self.text_widget.insert("end", f"The summary for {self.df}")
-        #Read csv file path location from puppy profile
 
     #Adds new row to file for new pet weight record
     def new_weight_record(self):
@@ -304,7 +338,6 @@ class puppy_project(tk.Tk):
 
     def read_path_location_from_csv(self):
 
-        #self.read_profile_file()
         self.pupCSVPath = (self.df["csvFile"].loc[int(self.clickedyou)])
 
     def whichfile(self, button_id):
@@ -316,8 +349,8 @@ class puppy_project(tk.Tk):
     #Read CSV file from puppy profile
     def read_pet_file_from_csv(self):  
 
-        #self.read_profile_file()
-        #readFile = pd.read_csv(self.read_profile_file["csvFile"].loc[int(self.whichfile)]
+        #self.read_pet_profile_file()
+        #readFile = pd.read_csv(self.read_pet_profile_file["csvFile"].loc[int(self.whichfile)]
         self.readFile = pd.read_csv(self.df["csvFile"].loc[int(self.clickedyou)])
         self.selected_row = self.readFile.iloc[int(self.clickedyou)] #this is the row of weight record
 
@@ -329,7 +362,7 @@ class puppy_project(tk.Tk):
 
         for x in range(len(self.readFile)):
                        
-            weightpuppyImage = (self.readFile["Image"].loc[(int(x))])           
+            weightpuppyImage = (self.readFile["Image"].loc[x])           
             dateofEntryRecord = (self.readFile["DateofEntry"].loc[x])
             weightRecord = (self.readFile["Weight"].loc[x])
             comment = (self.readFile["Comment"].loc[x])
@@ -354,35 +387,43 @@ class puppy_project(tk.Tk):
             self.entries_page.label.grid(row=9, column=x, padx=10, pady=10, sticky="e")
             self.entries_page.label.grid
 
-    #Returns individual pet's weight COLUMN ONLY records
-    def print_weight_record_for_individual():
-
-        self.doo = self.read_pet_file_from_csv()
-        userSearch = input("What weight do you wan to return?")
-
-        roo = self.doo["Weight"].loc[int(userSearch)]
-        #self.text_widget.insert("end", "found something \n\n")
-
-        #weight = df["Weight"].loc[r]
-        #print({weight})
-
     #Calculates age
-    def getAge(self): #DOB = '01/05/2023', , date_of_entry = '05/02/2023'
+    def getAgeforProfileInfo(self): #DOB = '01/05/2023', , date_of_entry = '05/02/2023'
         """Calculate the age based on all of the Date fields from the PetRecord.csv file and compares to the DOB field from the pets.csv file."""
+        self.read_pet_file_from_csv()
+        self.read_pet_profile_file()
 
         #read dateofEntry for weight
-        dr = self.read_pet_file_from_csv()
+        date_of_entry = date.today()
+
+        DOB = self.df["Date of Birth"].loc[self.clickedyou]
+        DOButc_time = time.strptime(DOB + ' 00:00:00', "%m/%d/%Y %H:%M:%S")
+        DOBepoch_time = timegm(DOButc_time)
+        
+        #DOEepoch_time = time.strptime(date_of_entry + ' 00:00:00', "%m/%d/%Y %H:%M:%S")
+        DOEepoch_time = timegm(date_of_entry.timetuple())
+
+        #Calculate the age
+        age = DOEepoch_time - DOBepoch_time #Subtract the DateOfEntry = DateOfBirth
+        self.ageInMonths = int(age/(60 * 60 * 24 * 30))
+
+        #print("Days: " + str(age/(3600 * 24))) # ((60 seconds * 60 minutes) = 3600 * 24 hours)
+        #print("Months: " + str(age/(60 * 60 * 24 * 30))) # (60 seconds * 60 minutes * 24 hours * 30 days)
+        #print("Years: " + str(age/(3600 * 24 * 365))) # ((60 seconds * 60 minutes) = 3600 seconds * 24 hours * 365 days)
+
+ #Calculates age
+    def getAgeforPlot(self): #DOB = '01/05/2023', , date_of_entry = '05/02/2023'
+        """Calculate the age based on all of the Date fields from the PetRecord.csv file and compares to the DOB field from the pets.csv file."""
+        self.read_pet_file_from_csv()
+        self.read_pet_profile_file()
+        #read dateofEntry for weight
+        date_of_entry = (self.readFile["DateofEntry"].loc[0])
         r = input("What weight do you want?")
-        date_of_entry = dr["DateofEntry"].loc[self.clickedyou]
         print("Date of Entry selected: " + r)
         print({date_of_entry})  
 
-        #read DOB from PetProfile
-        df = self.read_profile_file()
-        DOB = df["Date of Birth"].loc[self.clickedyou]
-        name = df["Pets Name"].loc[self.clickedyou]
-        print("Name:" + name)
-        print({DOB}) 
+        DOB = self.df["Date of Birth"].loc[self.clickedyou]
+
 
         DOButc_time = time.strptime(DOB + ' 00:00:00', "%m/%d/%Y %H:%M:%S")
         DOBepoch_time = timegm(DOButc_time)
@@ -390,21 +431,21 @@ class puppy_project(tk.Tk):
         DOEutc_time = time.strptime(date_of_entry + ' 00:00:00', "%m/%d/%Y %H:%M:%S")
         DOEepoch_time = timegm(DOEutc_time)
 
-        #Print the age
-        #Print(f"The person is "  + str(epoch_time) + " years old.")
-        #print("UTC " + str(DOButc_time))
-        #print("DOBepoch_time " + str(DOBepoch_time))
-        #print("Month " + str(DOButc_time.tm_mon))
-        #print("Day " + str(DOButc_time.tm_mday))
-        #print("Year " + str(DOButc_time.tm_year))
-
         #Calculate the age
         age = DOEepoch_time - DOBepoch_time #Subtract the DateOfEntry = DateOfBirth
+        self.ageInMonths = age/(60 * 60 * 24 * 30)
         #print("Age " + str(age))
         print("Days: " + str(age/(3600 * 24))) # ((60 seconds * 60 minutes) = 3600 * 24 hours)
         print("Months: " + str(age/(60 * 60 * 24 * 30))) # (60 seconds * 60 minutes * 24 hours * 30 days)
         print("Years: " + str(age/(3600 * 24 * 365))) # ((60 seconds * 60 minutes) = 3600 seconds * 24 hours * 365 days)
 
+    #Returns individual pet's weight COLUMN ONLY records
+    def print_weight_record_for_individual(self):
+
+        self.read_pet_file_from_csv()
+        r = input("What weight do you wan to return?")
+        self.unique_weight = (self.readFile["Weight"].loc[int(r)])
+        #print({unique_weight})
 
     #loads image from pet's individual csv file.
     def get_individual_image(self):
@@ -417,9 +458,6 @@ class puppy_project(tk.Tk):
         display(pupImage) # in jupyter, the image is shown as output   
         print("WTF IS HAPPENING?")
         #print(pupImage)
-
-
-
 
     def write_new_csv_file(self, pet_name): #create file
         # Get user input for the file name and data
@@ -442,21 +480,27 @@ class puppy_project(tk.Tk):
         
     # Delete file from profile file
     def delete_pet_row_from_file(self, file=puppy_profile_file):
+        
+        #df = pd.read_csv(file)
 
-        df = pd.read_csv(file)
+
+        #self.read_pet_profile_file()
+        self.df = pd.read_csv(file)
 
         # Prompt the user for the criteria to identify the row to be deleted
-        delete_pet_name = input("What to delete: ")
+        delete_pet_name = self.row_combobox.get()
 
         #Delete the CSV file before deleting the row.
-        csvFileToDelete = df["csvFile"].loc[int(delete_pet_name)]
-        delete_csv_file(csvFileToDelete)
+        #csvFileToDelete = self.df["csvFile"].loc[delete_pet_name]
+        #self.delete_csv_file(csvFileToDelete)
 
         # Filter the DataFrame to remove the row(s) matching the criteria
-        df = df[df['PetID'] != int(delete_pet_name)]
+        self.df = self.df[self.df['Pets Name'] != delete_pet_name]
         #Save the updated DataFrame back to the CSV file
-        df.to_csv(file, index=False)
+        self.df.to_csv(file, index=False)
+        print('file successfully deleted')
 
+    
     # Delete row from weight file
     def delete_weight_row_from_file(self):
         csv_file = self.read_path_location_from_csv()

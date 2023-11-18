@@ -2,36 +2,32 @@ import tkinter as tk
 from tkinter import ttk
 import pandas as pd
 
-def update_label():
-    # Read the CSV file into a DataFrame
-    csv_file = 'data\Dutton.csv'  # Replace with your CSV file path
-    df = pd.read_csv(csv_file)
+def show_selected():
+    selected_value = combo_box.get()
+    label.config(text=f"Selected value: {selected_value}")
 
-    # Get the information to display
-    selected_row = df.iloc[row_var.get()]
+# Read the CSV file into a DataFrame
+csv_file = 'data\PuppyProfiles.csv'  # Replace with your CSV file path
+df = pd.read_csv(csv_file)
 
-    # Update the label text
-    label.config(text=f"Name: {selected_row['DateofEntry']}, Age: {selected_row['Weight']}, Location: {selected_row['Image']}")
+# Extract the column values from the DataFrame
+options = df['Pets Name'].tolist()
 
 # Create the main window
 root = tk.Tk()
-root.title("Tkinter Label from CSV")
+root.title("Tkinter Combobox from CSV")
 
-# Create a label
+# Create a Combobox with values from the CSV file
+combo_box = ttk.Combobox(root, values=options, state='readonly')
+combo_box.pack()
+
+# Button to show the selected value
+show_button = tk.Button(root, text="Show Selected", command=show_selected)
+show_button.pack()
+
+# Label to display the selected value
 label = tk.Label(root, text="")
 label.pack()
-
-# Create a Combobox to select a row from the CSV file
-csv_file = 'data\Dutton.csv'  # Replace with your CSV file path
-df = pd.read_csv(csv_file)
-row_var = tk.IntVar(value=0)
-rows = list(range(len(df)))
-row_combobox = ttk.Combobox(root, textvariable=row_var, values=rows, state='readonly')
-row_combobox.pack()
-
-# Create a button to update the label
-update_button = tk.Button(root, text="Update Label", command=update_label)
-update_button.pack()
 
 # Run the GUI
 root.mainloop()
