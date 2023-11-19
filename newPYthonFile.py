@@ -56,7 +56,13 @@ class puppy_project(tk.Tk):
 
             self.picButton = Button(self, image=self.image_list[x], command=lambda t=x: self.whichfile(t))
             self.picButton.grid(row=2, column=x, padx=10, pady=10, sticky="ew")  
+    
     #Adds a new pet to file.
+    def whichfile(self, button_id):
+
+        self.clickedyou = button_id
+        #print(self.clickedyou)
+        self.weight_entries_page()
 
     def write_new_csv_file(self, pet_name): #create file
         # Get user input for the file name and data
@@ -380,12 +386,6 @@ class puppy_project(tk.Tk):
 
         self.pupCSVPath = (self.df["csvFile"].loc[int(self.clickedyou)])
 
-    def whichfile(self, button_id):
-
-        self.clickedyou = button_id
-        #print(self.clickedyou)
-        self.weight_entries_page()
-
     #Read CSV file from puppy profile
     def read_pet_file_from_csv(self):  
 
@@ -396,7 +396,7 @@ class puppy_project(tk.Tk):
 
     #Prints out individual pet's row records, e.g. an entry for a day
     def print_indvidual_entry_record(self):
-        self.read_pet_file_from_csv()
+        #self.read_pet_file_from_csv()
 
         self.weightImage = []
 
@@ -430,8 +430,24 @@ class puppy_project(tk.Tk):
 
             #self.picButton = Button(self, image=self.image_list[x], command=lambda t=x: self.whichfile(t))
             # Create an Entry Widget with a specific width (e.g., 30 characters)
-            self.entries_page.btnOpen=Button(self.entries_page, text="Delete this record:", command=lambda: self.delete_weight_row_from_file)
+            self.entries_page.btnOpen=Button(self.entries_page, text="Delete this record:", command=lambda m=x: self.delete_weight_row_from_file(m))
             self.entries_page.btnOpen.grid(row=10, column=x, padx=10, pady=10, sticky="ew")  
+
+    # Delete row from weight file
+    def delete_weight_row_from_file(self, delete_weight):
+
+        myselected_row = self.readFile.iloc[int(delete_weight)] #this is the row of weight record
+        #myselected_row['WeightID'] #returns the ID of the selected row
+
+        print('Lets print self.df first...............................ok now what..........................idk..................................')
+        print(self.pupCSVPath)
+
+        # Filter the DataFrame to remove the row(s) matching the criteria
+        df = self.readFile[self.readFile['WeightID'] != myselected_row['WeightID']]  #DateofEntry is the column to identify the row
+        # Save the updated DataFrame back to the CSV file
+        df.to_csv(self.pupCSVPath, index=False)
+
+        #print(f"Row for {delete_weight} has been deleted from the CSV file.")  
 
     #Calculates age
     def getAgeforProfileInfo(self): #DOB = '01/05/2023', , date_of_entry = '05/02/2023'
@@ -509,7 +525,7 @@ class puppy_project(tk.Tk):
     def delete_pet_row_from_file(self, file=puppy_profile_file):
         
         self.df = pd.read_csv(file)
-
+        
         print(self.row_combobox.current())
 
         #Delete the CSV file before deleting the row.
@@ -521,23 +537,7 @@ class puppy_project(tk.Tk):
         #Save the updated DataFrame back to the CSV file
         self.df.to_csv(file, index=False)
         print('file successfully deleted')
-
-    # Delete row from weight file
-    def delete_weight_row_from_file(self):
-        csv_file = self.read_path_location_from_csv()
-        df = pd.read_csv(csv_file)
-
-        # Prompt the user for the criteria to identify the row to be deleted
-        delete_weight = input("What Date Of Entry do you want to delete? ")
-
-        # Filter the DataFrame to remove the row(s) matching the criteria
-        df = df[df['DateofEntry'] != delete_weight]  #DateofEntry is the column to identify the row
-
-        # Save the updated DataFrame back to the CSV file
-        df.to_csv(csv_file, index=False)
-
-        print(f"Row for {delete_weight} has been deleted from the CSV file.")   
-
+ 
     # Deletes csv file when pet is deleted
     def delete_csv_file(self, csv_file):
 
