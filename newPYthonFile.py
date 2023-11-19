@@ -17,6 +17,10 @@ from rapidfuzz import fuzz, process
 from PIL import ImageTk, Image
 import csv
 import os
+import io
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib
 puppy_profile_file = 'data\PuppyProfiles.csv'
 DOB = ''
 
@@ -245,7 +249,7 @@ class puppy_project(tk.Tk):
         #self.entries_page .label = tk.Label(self.entries_page, text='Name: ' + puppyName + '\n Date of Birth: ' + puppyDOB + '\n Breed: ' + Breed)
 
     def weight_entries_page(self):
-
+        self.getAgeforPlot()
         self.entries_page=Toplevel()
         self.read_path_location_from_csv()
         pupName = (self.df["Pets Name"].loc[int(self.clickedyou)])
@@ -390,7 +394,7 @@ class puppy_project(tk.Tk):
     #Read CSV file from puppy profile
     def read_pet_file_from_csv(self):  
 
-        self.readFile = pd.read_csv(self.df["csvFile"].loc[int(self.clickedyou)])
+        self.readFile = pd.read_csv(self.df["csvFile"].loc[int(self.clickedyou)]) #reads the file for each individual puppy. (Their weight record)
         self.selected_row = self.readFile.iloc[int(self.clickedyou)] #this is the row of weight record
 
     #Prints out individual pet's row records, e.g. an entry for a day
@@ -474,50 +478,46 @@ class puppy_project(tk.Tk):
  #Calculates age
     def getAgeforPlot(self): #DOB = '01/05/2023', , date_of_entry = '05/02/2023'
         """Calculate the age based on all of the Date fields from the PetRecord.csv file and compares to the DOB field from the pets.csv file."""
-        self.read_pet_file_from_csv()
-        self.read_pet_profile_file()
-        #read dateofEntry for weight
-        date_of_entry = (self.readFile["DateofEntry"].loc[0])
-        r = input("What weight do you want?")
-        print("Date of Entry selected: " + r)
-        print({date_of_entry})  
 
-        DOB = self.df["Date of Birth"].loc[self.clickedyou]
+        self.agelist = []
 
+        self.read_pet_file_from_csv() #read the weight results for dutton
+        #print('..............................Print readFile................................')
+        #print(self.readFile) #reads the file for each individual puppy. (Their weight record)
+        self.read_pet_profile_file() #read the profileInfo for DOB
 
-        DOButc_time = time.strptime(DOB + ' 00:00:00', "%m/%d/%Y %H:%M:%S")
-        DOBepoch_time = timegm(DOButc_time)
+        for x in range(len(self.readFile)):
 
-        DOEutc_time = time.strptime(date_of_entry + ' 00:00:00', "%m/%d/%Y %H:%M:%S")
-        DOEepoch_time = timegm(DOEutc_time)
+            date_of_entry = (self.readFile["DateofEntry"].loc[x])
 
-        #Calculate the age
-        age = DOEepoch_time - DOBepoch_time #Subtract the DateOfEntry = DateOfBirth
-        self.ageInMonths = age/(60 * 60 * 24 * 30)
-        #print("Age " + str(age))
-        print("Days: " + str(age/(3600 * 24))) # ((60 seconds * 60 minutes) = 3600 * 24 hours)
-        print("Months: " + str(age/(60 * 60 * 24 * 30))) # (60 seconds * 60 minutes * 24 hours * 30 days)
-        print("Years: " + str(age/(3600 * 24 * 365))) # ((60 seconds * 60 minutes) = 3600 seconds * 24 hours * 365 days)
+            print('..............................Print date_of_entry................................')
+            print('dateofentry', {date_of_entry})  
 
+            DOB = self.df["Date of Birth"].loc[self.clickedyou]
+            print('DOB', {DOB})
+
+            DOButc_time = time.strptime(DOB + ' 00:00:00', "%m/%d/%Y %H:%M:%S")
+            DOBepoch_time = timegm(DOButc_time)
+
+            DOEutc_time = time.strptime(date_of_entry + ' 00:00:00', "%m/%d/%Y %H:%M:%S")
+            DOEepoch_time = timegm(DOEutc_time)
+
+            #Calculate the age
+            age = DOEepoch_time - DOBepoch_time #Subtract the DateOfEntry = DateOfBirth
+            ageInMonthsforplotting = int(age/(60 * 60 * 24 * 30))
+            print("Age ", self.ageInMonthsforplotting, "months")
+            self.agelist.append(ageInMonthsforplotting)
+            #print("Days: " + str(age/(3600 * 24))) # ((60 seconds * 60 minutes) = 3600 * 24 hours)
+            #print("Months: " + str(age/(60 * 60 * 24 * 30))) # (60 seconds * 60 minutes * 24 hours * 30 days)
+            #print("Years: " + str(age/(3600 * 24 * 365))) # ((60 seconds * 60 minutes) = 3600 seconds * 24 hours * 365 days)
+        print(self.agelist)
     #Returns individual pet's weight COLUMN ONLY records
     def print_weight_record_for_individual(self):
-
+        
         self.read_pet_file_from_csv()
         r = input("What weight do you wan to return?")
         self.unique_weight = (self.readFile["Weight"].loc[int(r)])
         #print({unique_weight})
-
-    #loads image from pet's individual csv file.
-    def get_individual_image(self):
-
-        df = self.read_pet_file_from_csv()
-        #r = input("What image do you want?")
-        pupImage = df["Image"].loc[self.clickedyou]
-        # load and show images
-        img = Image.open(pupImage)
-        display(pupImage) # in jupyter, the image is shown as output   
-        print("WTF IS HAPPENING?")
-        #print(pupImage)
 
     # Delete file from profile file
     def delete_pet_row_from_file(self, file=puppy_profile_file):
@@ -547,7 +547,7 @@ class puppy_project(tk.Tk):
             print(f"CSV file '{csv_file}' does not exist.")
 
     #Plots csv file into plotly
-    def plotcsv(self):
+    def myOldplotcsv(self):
         '''Plots pet csv file based on PetID selected by user. '''
         # Read the CSV file into a DataFrame
         csv_file = self.read_pet_file_from_csv()
@@ -566,6 +566,48 @@ class puppy_project(tk.Tk):
 
         # Display the plot (or save it to a file)
         plt.show()
+
+    #Plots csv file into image label
+    def plotcsv(self):
+
+        print(self.agelist)
+        '''Plots pet csv file based on PetID selected by user. '''
+        # Read the CSV file into a DataFrame
+        csv_file = read_pet_file_from_csv()
+
+        # Extract X and Y data
+        x = csv_file['DateofEntry']
+        y = csv_file['Weight']
+
+        fig = Figure(figsize=(5, 4), dpi=100)
+        ax = fig.add_subplot(111)
+        ax.plot(x, y)
+
+        # Customize the plot (optional)
+        plt.title('Weight Records')
+        plt.xlabel('Date of Entry')
+        plt.ylabel('Weight')
+
+        # Display the plot (or save it to a file)
+        #plt.show()
+
+        # Save the figure to a BytesIO object
+        buf = io.BytesIO()
+        FigureCanvas(fig).print_png(buf)
+
+        #Load this into a PIL image
+        buf.seek(0)
+        img = Image.open(buf)
+
+        # Convert the PIL image into a PhotoImage
+        self.photo = ImageTk.PhotoImage(img)
+
+    def some_widget(self):
+        # Create a label and set its image to the PhotoImage
+        label = Label(root, image=self.photo)
+        label.image = self.photo  # keep a reference to the image
+        label.pack()
+
 
 
 app=puppy_project()
