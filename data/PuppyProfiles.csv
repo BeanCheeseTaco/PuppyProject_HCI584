@@ -1,7 +1,5 @@
-Pets Name,Date of Birth,Breed,Profile Image,csvFile,PetID
-Dutton,2/24/2023,Schnauzer,images\puppy1.jpg,data\Dutton.csv,0
-Max,5/18/2021,Poodle,images\puppy3.jpg,data\Max.csv,1
-Oliver,12/6/2022,St. Bernard,images\puppy4.jpg,data\Oliver.csv,2
-Buster,12/6/2022,St. Bernard,images\puppy4.jpg,data\Buster.csv,3
-Jim,5/18/2021,Poodle,images\puppy3.jpg,data\Jim.csv,4
-Bug,5/18/2021,Poodle,images\puppy3.jpg,data\Bug.csv,5
+PetID,Pets Name,Date of Birth,Breed,Profile Image,csvFile
+0,Dutton,2/24/2023,Schnauzer,images\puppy1.jpg,data\Dutton.csv
+1,Max,5/18/2021,Poodle,images\puppy3.jpg,data\Max.csv
+2,Oliver,12/6/2022,St. Bernard,images\puppy4.jpg,data\Oliver.csv
+3,Buster,12/6/2022,St. Bernard,images\puppy4.jpg,data\Buster.csv

@@ -3,6 +3,9 @@
 import tkinter as tk 
 from tkinter import ttk
 from tkinter import *
+from tkinter import filedialog
+import shutil
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -54,15 +57,38 @@ class puppy_project(tk.Tk):
             self.picButton = Button(self, image=self.image_list[x], command=lambda t=x: self.whichfile(t))
             self.picButton.grid(row=2, column=x, padx=10, pady=10, sticky="ew")  
     #Adds a new pet to file.
+
+    def write_new_csv_file(self, pet_name): #create file
+        # Get user input for the file name and data
+        folder_path = 'data'
+        #pet_name = input("Enter the name of the new pet: ")
+        self.csv_file_name = pet_name+'.csv'
+        # Combine the folder path and file name to create the full file path
+        file_path = os.path.join(folder_path, self.csv_file_name)
+        print(self.csv_file_name)
+
+        # Data to be written to the CSV file
+        data = [
+            ['DateofEntry', 'Weight', 'Image', 'Comment']
+        ]
+        #Create csv file
+        with open(file_path, 'w') as new_csv_file:
+            csv_writer = csv.writer(new_csv_file)
+            csv_writer.writerows(data)
+        #return file_path
+        
     def add_new_pet(self, file=puppy_profile_file):
         
+        PetID = self.df["PetID"].max() + 1
         pet_name = self.pet_name_entry.get()
         DOB = self.DOB_entry.get()
         breed = self.pet_breed_entry.get()
-        #image = self.pet_image_label.get()
-        csvFile = self.write_new_csv_file(pet_name)
+        image = self.filepath
+        self.write_new_csv_file(pet_name)
+        csvFile = self.csv_file_name
+
         # Define the user data as a list
-        user_data = [pet_name, DOB, breed, csvFile]
+        user_data = [PetID, pet_name, DOB, breed, image, csvFile]
 
         try:
             # Open the CSV file in append mode
@@ -76,6 +102,21 @@ class puppy_project(tk.Tk):
             print("User data added successfully.")
         except Exception as e:
             print(f"An error occurred: {e}")
+
+    def upload_file(self):
+        # Open a file dialog and let the user select an image file
+        file_path = filedialog.askopenfilename(filetypes=[('Image Files', '*.png;*.jpg')])
+        #file_path = filedialog.askopenfilename()
+
+        if file_path:
+            # Specify the folder to copy the file to
+            destination_folder = "images"
+            
+            # Use shutil to copy the file
+            shutil.copy(file_path, destination_folder)
+
+            self.filepath = destination_folder + '\\' + os.path.split(file_path)[1]
+            #os.remove(self.filepath)
 
     def new_pet_page(self):
 
@@ -94,7 +135,7 @@ class puppy_project(tk.Tk):
         self.pet_name_label.grid
 
         # Create an Entry Widget with a specific width (e.g., 30 characters)
-        self.pet_name_entry = tk.Entry(self.pet_page, width=30) #entry = textbox single line for text
+        self.pet_name_entry = tk.Entry(self.pet_page, width=30)
         self.pet_name_entry.grid(row=1, column=1, padx=10, pady=10, sticky="ew") 
        
         #Label for DOB:
@@ -103,13 +144,13 @@ class puppy_project(tk.Tk):
         self.DOB_label.grid
 
         # Create an Entry Widget with a specific width (e.g., 30 characters)
-        self.DOB_entry = tk.Entry(self.pet_page, width=30) #entry = textbox single line for text
+        self.DOB_entry = tk.Entry(self.pet_page, width=30)
         self.DOB_entry.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
 
         #Label for Breed:
         self.pet_breed_label = tk.Label(self.pet_page, text="Pet's Breed:")
         self.pet_breed_label.grid(row=3, column=0, padx=10, pady=10, sticky="e")
-        #self.pet_breed_label.grid
+        self.pet_breed_label.grid
 
         #Entry widget for Breed:
         self.pet_breed_entry = tk.Entry(self.pet_page, width=30)
@@ -121,20 +162,19 @@ class puppy_project(tk.Tk):
         self.pet_image_label.grid
 
         # Create button to upload image.
-        self.pet_image_btnOpen=Button(self.pet_page, text="Upload Image")
+        self.pet_image_btnOpen= tk.Button(self.pet_page, text="Upload Puppy Image", command=self.upload_file)
         self.pet_image_btnOpen.grid(row=4, column=1, padx=10, pady=10, sticky="ew")
 
-
         # Create a Submit Button and place it on the right (column 2)
-        self.submit_btnOpen=Button(self.pet_page, text="Submit", command=self.add_new_pet)
+        self.submit_btnOpen= tk.Button(self.pet_page, text="Submit", command=self.add_new_pet)
         self.submit_btnOpen.grid(row=5, column=3, padx=10, pady=10, sticky="ew")    
 
         #Buttons to Exit
-        self.pet_page_buttonClose=Button(self.pet_page, text="Exit", command=self.pet_page.destroy)
+        self.pet_page_buttonClose= tk.Button(self.pet_page, text="Exit", command=self.pet_page.destroy)
         self.pet_page_buttonClose.grid(row=6, column=3, padx=10, pady=10, sticky="ew") 
 
         #Button to to back to home page
-        self.pet_page_btnOpen=Button(self.pet_page, text="Go Home", command=self.weight_entries_page)
+        self.pet_page_btnOpen= tk.Button(self.pet_page, text="Go Home", command=self.weight_entries_page)
         self.pet_page_btnOpen.grid(row=7, column=3, padx=10, pady=10, sticky="ew") 
 
     def delete_pet_page(self):
@@ -153,10 +193,8 @@ class puppy_project(tk.Tk):
         self.delete_pet_label.grid(row=1, column=0, padx=10, pady=10, sticky="e")
         self.delete_pet_label.grid
 
-     # Extract the column values from the DataFrame
-        options = self.df['Pets Name'].tolist()
-        optionID = self.df['PetID'].tolist()
-        
+        # Extract the column values from the DataFrame
+        options = self.df['Pets Name'].tolist()        
 
         self.row_combobox = ttk.Combobox(self.delete_pet, values=options, state='readonly')
         self.row_combobox.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
@@ -167,7 +205,9 @@ class puppy_project(tk.Tk):
         self.update_button = tk.Button(self.delete_pet, text="DELETE PET", command=self.delete_pet_row_from_file)
         self.update_button.grid(row=3, column=1, padx=10, pady=10, sticky="ew") 
 
-        #self.selected_value = self.row_combobox.get()
+        #Buttons to Cancel
+        self.delete_pet_buttonClose= tk.Button(self.delete_pet, text="Cancel", command=self.delete_pet.destroy)
+        self.delete_pet_buttonClose.grid(row=6, column=3, padx=10, pady=10, sticky="ew") 
        
     # gets dog's profile based on PetID. (Gets dog's profile)
     def get_uniquedogprofile(self):
@@ -260,10 +300,10 @@ class puppy_project(tk.Tk):
 
         input_date = self.input_date_entry.get()
         weight = self.weight_entry.get()
-        #image = self.image_entry.get()
+        image = self.filepath
         comment = self.comment_entry.get()
         # Define the user data as a list
-        weight_user_data = [input_date, weight, comment]
+        weight_user_data = [input_date, weight, image, comment]
 
         try:
             # Open the CSV file in append mode
@@ -307,13 +347,13 @@ class puppy_project(tk.Tk):
         self.weight_entry.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
 
         #Label for Image:
-        #self.image_label = tk.Label(self.new_weight, text="Upload Image:")
-        #self.image_label.grid(row=3, column=0, padx=10, pady=10, sticky="e")
-        #self.image_label.grid
+        self.image_label = tk.Label(self.new_weight, text="Upload Image:")
+        self.image_label.grid(row=3, column=0, padx=10, pady=10, sticky="e")
+        self.image_label.grid
 
-        # Create button to upload image.
-        #self.image_btnOpen=Button(self.new_weight, text="Upload Image", command=self.weight_entries_page)
-        #self.image_btnOpen.grid(row=3, column=1, padx=10, pady=10, sticky="ew")
+        #Create button to upload image.
+        self.image_btnOpen=Button(self.new_weight, text="Upload Image", command=self.upload_file)
+        self.image_btnOpen.grid(row=3, column=1, padx=10, pady=10, sticky="ew")
 
         #Label for Breed:
         self.comment_label = tk.Label(self.new_weight, text="Comments:")
@@ -386,6 +426,12 @@ class puppy_project(tk.Tk):
             self.entries_page.label = tk.Label(self.entries_page, text='Comment: ' + comment)
             self.entries_page.label.grid(row=9, column=x, padx=10, pady=10, sticky="e")
             self.entries_page.label.grid
+            
+
+            #self.picButton = Button(self, image=self.image_list[x], command=lambda t=x: self.whichfile(t))
+            # Create an Entry Widget with a specific width (e.g., 30 characters)
+            self.entries_page.btnOpen=Button(self.entries_page, text="Delete this record:", command=lambda: self.delete_weight_row_from_file)
+            self.entries_page.btnOpen.grid(row=10, column=x, padx=10, pady=10, sticky="ew")  
 
     #Calculates age
     def getAgeforProfileInfo(self): #DOB = '01/05/2023', , date_of_entry = '05/02/2023'
@@ -459,48 +505,23 @@ class puppy_project(tk.Tk):
         print("WTF IS HAPPENING?")
         #print(pupImage)
 
-    def write_new_csv_file(self, pet_name): #create file
-        # Get user input for the file name and data
-        folder_path = 'data'
-        #pet_name = input("Enter the name of the new pet: ")
-        csv_file_name = pet_name+'.csv'
-        # Combine the folder path and file name to create the full file path
-        file_path = os.path.join(folder_path, csv_file_name)
-        print(csv_file_name)
-
-        # Data to be written to the CSV file
-        data = [
-            ['DateofEntry', 'Weight', 'Image', 'Comment']
-        ]
-        #Create csv file
-        with open(file_path, 'w') as csv_file:
-            csv_writer = csv.writer(csv_file)
-            csv_writer.writerows(data)
-        #return file_path
-        
     # Delete file from profile file
     def delete_pet_row_from_file(self, file=puppy_profile_file):
         
-        #df = pd.read_csv(file)
-
-
-        #self.read_pet_profile_file()
         self.df = pd.read_csv(file)
 
-        # Prompt the user for the criteria to identify the row to be deleted
-        delete_pet_name = self.row_combobox.get()
+        print(self.row_combobox.current())
 
         #Delete the CSV file before deleting the row.
-        #csvFileToDelete = self.df["csvFile"].loc[delete_pet_name]
-        #self.delete_csv_file(csvFileToDelete)
+        csvFileToDelete = self.df["csvFile"].loc[self.row_combobox.current()]
+        self.delete_csv_file(csvFileToDelete)
 
         # Filter the DataFrame to remove the row(s) matching the criteria
-        self.df = self.df[self.df['Pets Name'] != delete_pet_name]
+        self.df = self.df[self.df['PetID'] != self.row_combobox.current()]
         #Save the updated DataFrame back to the CSV file
         self.df.to_csv(file, index=False)
         print('file successfully deleted')
 
-    
     # Delete row from weight file
     def delete_weight_row_from_file(self):
         csv_file = self.read_path_location_from_csv()
@@ -519,12 +540,10 @@ class puppy_project(tk.Tk):
 
     # Deletes csv file when pet is deleted
     def delete_csv_file(self, csv_file):
-        #folder_path = 'data'
-        #csv_file = read_path_location_from_csv()  # Replace with the path to your CSV file
-        #csv_file = 'data/test.csv'
+
         # Check if the file exists before attempting to delete it
-        if os.path.exists(csv_file):
-            os.remove(csv_file)
+        if os.path.exists('data\\'+str(csv_file)):
+            os.remove('data\\'+str(csv_file))
             print(f"CSV file '{csv_file}' has been deleted.")
         else:
             print(f"CSV file '{csv_file}' does not exist.")
