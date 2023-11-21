@@ -248,8 +248,46 @@ class puppy_project(tk.Tk):
         self.entries_page.label.grid    
         #self.entries_page .label = tk.Label(self.entries_page, text='Name: ' + puppyName + '\n Date of Birth: ' + puppyDOB + '\n Breed: ' + Breed)
 
+    #Plots csv file into image label
+    def plotcsv(self):
+        
+        #self.getAgeforPlot()
+        self.read_pet_file_from_csv()
+        '''Plots pet csv file based on PetID selected by user. '''
+        # Read the CSV file into a DataFrame
+        #csv_file = self.readFile
+        #print(csv_file)
+        # Extract X and Y data
+        #x = self.agelist
+        x = self.readFile['DateofEntry']
+        y = self.readFile['Weight']
+
+        fig = Figure(figsize=(5, 4), dpi=100)
+        ax = fig.add_subplot(111)
+        ax.plot(x, y)
+
+        # Customize the plot (optional)
+        #plt.title('Weight Records')
+        #plt.xlabel('Date of Entry')
+        #plt.ylabel('Weight')
+
+        # Display the plot (or save it to a file)
+        #plt.show()
+
+        # Save the figure to a BytesIO object
+        buf = io.BytesIO()
+        FigureCanvas(fig).print_png(buf)
+
+        #Load this into a PIL image
+        buf.seek(0)
+        img = Image.open(buf)
+
+        # Convert the PIL image into a PhotoImage
+        self.photo = ImageTk.PhotoImage(img)
+
     def weight_entries_page(self):
-        self.getAgeforPlot()
+        
+        self.plotcsv()
         self.entries_page=Toplevel()
         self.read_path_location_from_csv()
         pupName = (self.df["Pets Name"].loc[int(self.clickedyou)])
@@ -262,11 +300,16 @@ class puppy_project(tk.Tk):
         #self.entries_page.label.grid(row=0, column=8, padx=10, pady=10, sticky="e")
         #self.entries_page.label.grid
 
+        # Create a label and set its image to the PhotoImage
+        self.entries_page.label = tk.Label(self.entries_page, image=self.photo)
+        #self.entries_page.label.image = self.photo  # keep a reference to the image
+        self.entries_page.label.grid(row=1, column=0, padx=0, pady=0, sticky="e")
+
         self.get_puppy_profile_image() # get's profile's image
 
         # Create an Entry Widget with a specific width (e.g., 30 characters)
         self.entries_page.search_button = tk.Button(self.entries_page, text="Edit Profile:", width=2, command=self.new_pet_page)
-        self.entries_page.search_button.grid(row=5, column=10, padx=10, pady=10, sticky="ew")  
+        self.entries_page.search_button.grid(row=0, column=5, padx=10, pady=10, sticky="ew")  
 
         # Create an Entry Widget with a specific width (e.g., 30 characters)
         self.entries_page.btnOpen=Button(self.entries_page, text="Add new weight record:", command=self.add_weight_page)
@@ -283,6 +326,13 @@ class puppy_project(tk.Tk):
         self.entries_page.buttonClose=Button(self.entries_page, text="Exit", command=self.entries_page.destroy)
         self.entries_page.buttonClose.grid(row=10, column=10, padx=10, pady=10, sticky="ew")         
         
+
+        '''def some_widget(self):
+        # Create a label and set its image to the PhotoImage
+        self.entries_page.label = tk.Label(self.entries_page, image=self.photo)
+        self.entries_page.label.image = self.photo  # keep a reference to the image
+        self.entries_page.label.grid(row=1, column=0, padx=10, pady=10, sticky="e")'''
+
     def get_puppy_profile_image(self):
 
         self.new_image_list = []
@@ -490,11 +540,11 @@ class puppy_project(tk.Tk):
 
             date_of_entry = (self.readFile["DateofEntry"].loc[x])
 
-            print('..............................Print date_of_entry................................')
-            print('dateofentry', {date_of_entry})  
+            #print('..............................Print date_of_entry................................')
+            #print('dateofentry', {date_of_entry})  
 
             DOB = self.df["Date of Birth"].loc[self.clickedyou]
-            print('DOB', {DOB})
+            #print('DOB', {DOB})
 
             DOButc_time = time.strptime(DOB + ' 00:00:00', "%m/%d/%Y %H:%M:%S")
             DOBepoch_time = timegm(DOButc_time)
@@ -505,12 +555,12 @@ class puppy_project(tk.Tk):
             #Calculate the age
             age = DOEepoch_time - DOBepoch_time #Subtract the DateOfEntry = DateOfBirth
             ageInMonthsforplotting = int(age/(60 * 60 * 24 * 30))
-            print("Age ", self.ageInMonthsforplotting, "months")
+            #print("Age ", ageInMonthsforplotting, "months")
             self.agelist.append(ageInMonthsforplotting)
             #print("Days: " + str(age/(3600 * 24))) # ((60 seconds * 60 minutes) = 3600 * 24 hours)
             #print("Months: " + str(age/(60 * 60 * 24 * 30))) # (60 seconds * 60 minutes * 24 hours * 30 days)
             #print("Years: " + str(age/(3600 * 24 * 365))) # ((60 seconds * 60 minutes) = 3600 seconds * 24 hours * 365 days)
-        print(self.agelist)
+        #print(self.agelist)
     #Returns individual pet's weight COLUMN ONLY records
     def print_weight_record_for_individual(self):
         
@@ -545,69 +595,6 @@ class puppy_project(tk.Tk):
             print(f"CSV file '{csv_file}' has been deleted.")
         else:
             print(f"CSV file '{csv_file}' does not exist.")
-
-    #Plots csv file into plotly
-    def myOldplotcsv(self):
-        '''Plots pet csv file based on PetID selected by user. '''
-        # Read the CSV file into a DataFrame
-        csv_file = self.read_pet_file_from_csv()
-
-        # Extract X and Y data
-        x = csv_file['DateofEntry']
-        y = csv_file['Weight']
-
-        # Create a basic line plot
-        plt.plot(x, y)
-
-        # Customize the plot (optional)
-        plt.title('Weight Records')
-        plt.xlabel('Date of Entry')
-        plt.ylabel('Weight')
-
-        # Display the plot (or save it to a file)
-        plt.show()
-
-    #Plots csv file into image label
-    def plotcsv(self):
-
-        print(self.agelist)
-        '''Plots pet csv file based on PetID selected by user. '''
-        # Read the CSV file into a DataFrame
-        csv_file = read_pet_file_from_csv()
-
-        # Extract X and Y data
-        x = csv_file['DateofEntry']
-        y = csv_file['Weight']
-
-        fig = Figure(figsize=(5, 4), dpi=100)
-        ax = fig.add_subplot(111)
-        ax.plot(x, y)
-
-        # Customize the plot (optional)
-        plt.title('Weight Records')
-        plt.xlabel('Date of Entry')
-        plt.ylabel('Weight')
-
-        # Display the plot (or save it to a file)
-        #plt.show()
-
-        # Save the figure to a BytesIO object
-        buf = io.BytesIO()
-        FigureCanvas(fig).print_png(buf)
-
-        #Load this into a PIL image
-        buf.seek(0)
-        img = Image.open(buf)
-
-        # Convert the PIL image into a PhotoImage
-        self.photo = ImageTk.PhotoImage(img)
-
-    def some_widget(self):
-        # Create a label and set its image to the PhotoImage
-        label = Label(root, image=self.photo)
-        label.image = self.photo  # keep a reference to the image
-        label.pack()
-
 
 
 app=puppy_project()
