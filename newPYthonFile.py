@@ -73,7 +73,7 @@ class puppy_project(tk.Tk):
 
         self.clickedyou = button_id
         #print(self.clickedyou)
-        self.weight_entries_page()
+        self.OLDweight_entries_page()
 
     def write_new_csv_file(self, pet_name): #create file
         # Get user input for the file name and data
@@ -134,6 +134,9 @@ class puppy_project(tk.Tk):
 
             self.filepath = destination_folder + '\\' + os.path.split(file_path)[1]
             #os.remove(self.filepath)
+        else:
+            shutil.copy(file_path, destination_folder)
+            self.filepath = destination_folder + '\\nopetimage.jpg'
 
     def new_pet_page(self):
 
@@ -191,7 +194,7 @@ class puppy_project(tk.Tk):
         self.pet_page_buttonClose.grid(row=6, column=3, padx=10, pady=10, sticky="ew") 
 
         #Button to to back to home page
-        self.pet_page_btnOpen= tk.Button(self.pet_page, text="Go Home", command=self.weight_entries_page)
+        self.pet_page_btnOpen= tk.Button(self.pet_page, text="Go Home", command=self.OLDweight_entries_page)
         self.pet_page_btnOpen.grid(row=7, column=3, padx=10, pady=10, sticky="ew") 
 
     def delete_pet_page(self):
@@ -225,7 +228,7 @@ class puppy_project(tk.Tk):
         #Buttons to Cancel
         self.delete_pet_buttonClose= tk.Button(self.delete_pet, text="Cancel", command=self.delete_pet.destroy)
         self.delete_pet_buttonClose.grid(row=6, column=3, padx=10, pady=10, sticky="ew") 
-       
+
     # gets dog's profile based on PetID. (Gets dog's profile)
     def get_uniquedogprofile(self):
         '''returns dog's profiles based on petID.'''
@@ -234,23 +237,47 @@ class puppy_project(tk.Tk):
         puppyDOB = (self.df["Date of Birth"].loc[int(self.clickedyou)])
         Breed = (self.df["Breed"].loc[int(self.clickedyou)])
 
-        self.entries_page.label = tk.Label(self.entries_page, text='Profile:')
+        self.main_frame.label = tk.Label(self.main_frame, text='Profile:')
+        self.main_frame.label.grid(row=6, column=1, padx=20, pady=10, sticky="ne")
+
+        self.main_frame.label = tk.Label(self.main_frame, text='Name: ' + puppyName)
+        self.main_frame.label.grid(row=7, column=1, padx=20, pady=10, sticky="ne")
+
+        self.main_frame.label = tk.Label(self.main_frame, text='Date of Birth: ' + puppyDOB)
+        self.main_frame.label.grid(row=8, column=1, padx=20, pady=10, sticky="ne")
+
+        self.main_frame.label = tk.Label(self.main_frame, text='Current Age: ' + str(self.ageInMonths) + " months")
+        self.main_frame.label.grid(row=9, column=1, padx=20, pady=10, sticky="ne")
+
+        self.main_frame.label = tk.Label(self.main_frame, text='Breed: ' + Breed)
+        self.main_frame.label.grid(row=10, column=1, padx=20, pady=10, sticky="ne")
+        #self.entries_page .label = tk.Label(self.entries_page, text='Name: ' + puppyName + '\n Date of Birth: ' + puppyDOB + '\n Breed: ' + Breed) 
+
+    # gets dog's profile based on PetID. (Gets dog's profile)
+    def OLDget_uniquedogprofile(self):
+        '''returns dog's profiles based on petID.'''
+        self.getAgeforProfileInfo()
+        puppyName = (self.df["Pets Name"].loc[int(self.clickedyou)])
+        puppyDOB = (self.df["Date of Birth"].loc[int(self.clickedyou)])
+        Breed = (self.df["Breed"].loc[int(self.clickedyou)])
+
+        self.entries_page.label = tk.Label(self.second_frame, text='Profile:')
         self.entries_page.label.grid(row=1, column=5, padx=10, pady=10, sticky="ew")
         self.entries_page.label.grid
 
-        self.entries_page.label = tk.Label(self.entries_page, text='Name: ' + puppyName)
+        self.entries_page.label = tk.Label(self.second_frame, text='Name: ' + puppyName)
         self.entries_page.label.grid(row=2, column=5, padx=10, pady=10, sticky="ew")
         self.entries_page.label.grid
 
-        self.entries_page.label = tk.Label(self.entries_page, text='Date of Birth: ' + puppyDOB)
+        self.entries_page.label = tk.Label(self.second_frame, text='Date of Birth: ' + puppyDOB)
         self.entries_page.label.grid(row=3, column=5, padx=10, pady=10, sticky="ew")
         self.entries_page.label.grid
 
-        self.entries_page.label = tk.Label(self.entries_page, text='Current Age: ' + str(self.ageInMonths) + " months")
+        self.entries_page.label = tk.Label(self.second_frame, text='Current Age: ' + str(self.ageInMonths) + " months")
         self.entries_page.label.grid(row=4, column=5, padx=10, pady=10, sticky="ew")
         self.entries_page.label.grid
 
-        self.entries_page.label = tk.Label(self.entries_page, text='Breed: ' + Breed)
+        self.entries_page.label = tk.Label(self.second_frame, text='Breed: ' + Breed)
         self.entries_page.label.grid(row=5, column=5, padx=10, pady=10, sticky="ew")
         self.entries_page.label.grid    
         #self.entries_page .label = tk.Label(self.entries_page, text='Name: ' + puppyName + '\n Date of Birth: ' + puppyDOB + '\n Breed: ' + Breed)
@@ -284,53 +311,105 @@ class puppy_project(tk.Tk):
         self.photo = ImageTk.PhotoImage(img)
 
     def weight_entries_page(self):
-        
+
         self.plotcsv()
         self.entries_page=Toplevel()
         self.read_path_location_from_csv()
         pupName = (self.df["Pets Name"].loc[int(self.clickedyou)])
 
         self.entries_page.title("Entries for pet: " + pupName)
-        self.get_uniquedogprofile() #display's dog's profile
-        
-        #Label for Profile:
-        #self.entries_page.label = tk.Label(self.entries_page, text='About ' + pupName)
-        #self.entries_page.label.grid(row=0, column=8, padx=10, pady=10, sticky="e")
-        #self.entries_page.label.grid
+        self.entries_page.geometry('800x800')
+        self.entries_page.minsize(800,800)
 
-        # Create a label and set its image to the PhotoImage
-        self.entries_page.label = tk.Label(self.entries_page, image=self.photo)
+        self.menu_frame = tk.Frame(self.entries_page)
+        self.main_frame = tk.Frame(self.entries_page)
+        self.weights = tk.Frame(self.entries_page)
+
+        self.menu_frame.place(x = 0, y = 0, relwidth= 0.6, relheight = 1)
+        self.main_frame.place(relx = 0.6, y = 0, relwidth= 0.4, relheight = .5)
+        self.weights.place(x = 0, y = 0, relwidth= .2, relheight = .5)
+
+        self.menu_frame.columnconfigure((0,1,2,3,4,5), weight = 1, uniform = 'a')
+        self.menu_frame.rowconfigure((0,1,2,3,4,5), weight = 1, uniform = 'a')
+
+        self.main_frame.columnconfigure((0,1), weight = 1, uniform = 'a')
+        self.main_frame.rowconfigure((0,1,2,3,4,5), weight = 1, uniform = 'a')
+
+        self.weights.columnconfigure((0,1,2,3,4,5), weight = 1, uniform = 'a')
+        self.weights.rowconfigure((0,1,2,3,4,5), weight = 1, uniform = 'a')
+
+        #self.weights.place(self.weights, background='yellow').pack(expand = True, fille = 'both')
+
+        # graph image
+        self.menu_frame.label2 = tk.Label(self.menu_frame, image=self.photo)
+        self.menu_frame.label2.grid(row=0, column=0, columnspan=10, rowspan=10, sticky = 'nw')
+
+        self.OLDget_uniquedogprofile() 
+        self.OLDget_puppy_profile_image() # get's profile's image
+
+    def OLDweight_entries_page(self):
+        
+        self.plotcsv()
+        self.entries_page=Toplevel()
+        self.read_path_location_from_csv()
+        pupName = (self.df["Pets Name"].loc[int(self.clickedyou)])
+
+        self.entries_page.geometry('800x800')
+        self.entries_page.minsize(800,800)
+        #create a main frame
+        main_frame = Frame(self.entries_page)
+        main_frame.pack(fill=BOTH, expand=1)
+
+        #create a canvas
+        my_canvas = Canvas(main_frame)
+        my_canvas.pack(side=LEFT, fill=BOTH, expand=1)
+
+        # add a scrollbar to the canvas
+        my_scrollbar = tk.Scrollbar(main_frame, orient=HORIZONTAL, command=my_canvas.xview)
+        my_scrollbar.pack(side=BOTTOM, fill=X)
+        
+        #configure the canvas
+        my_canvas.configure(yscrollcommand=my_scrollbar.set)
+        my_canvas.bind('<Configure>', lambda e:my_canvas.configure(scrollregion = my_canvas.bbox("all")))
+        
+        # create another fram inside the canvas 
+        self.second_frame = Frame(my_canvas)
+
+        #add that new frame to a window in the canvas
+        my_canvas.create_window((0,0), window=self.second_frame, anchor='nw')
+
+
+        self.entries_page.title("Entries for pet: " + pupName)
+        self.OLDget_uniquedogprofile() #display's dog's profile
+        
+        # plot image
+        self.entries_page.label = tk.Label(self.second_frame, image=self.photo)
         #self.entries_page.label.image = self.photo  # keep a reference to the image
         self.entries_page.label.grid(row=0, column=0, padx=0, pady=0, sticky="ew")
-        self.entries_page.label.grid
+        #self.entries_page.label.grid
 
-        self.entries_page.label = tk.Label(self.entries_page, text=pupName, font=('Ariel', 40))
+        self.entries_page.label = tk.Label(self.second_frame, text=pupName, font=('Ariel', 40))
         self.entries_page.label.grid(row=0, column=2, padx=0, pady=0, sticky="ew")
-        self.entries_page.label.grid
+        #self.entries_page.label.grid
 
-        self.get_puppy_profile_image() # get's profile's image
-
-        # Create an Entry Widget with a specific width (e.g., 30 characters)
-        self.entries_page.search_button = tk.Button(self.entries_page, text="Edit Profile:", width=2, command=self.new_pet_page)
-        self.entries_page.search_button.grid(row=6, column=5, padx=10, pady=10, sticky="ew")  
-        self.entries_page.search_button.grid
+        self.OLDget_puppy_profile_image() # get's profile's image
 
         # Create an Entry Widget with a specific width (e.g., 30 characters)
-        self.entries_page.btnOpen=Button(self.entries_page, text="Add new weight record:", command=self.add_weight_page)
-        self.entries_page.btnOpen.grid(row=4, column=0, padx=10, pady=10, sticky="ew")  
-        self.entries_page.btnOpen.grid
+        self.entries_page.btnOpen=Button(self.second_frame, text="Add new weight record:", command=self.add_weight_page)
+        self.entries_page.btnOpen.grid(row=3, column=0, padx=10, pady=10, sticky="ew")  
+        #self.entries_page.btnOpen.grid
 
         #Tiles for Previous records:
-        self.entries_page.label = tk.Label(self.entries_page, text="Previous weight records: ")
-        self.entries_page.label.grid(row=5, column=0, padx=10, pady=10, sticky="ew")
-        self.entries_page.label.grid
+        self.entries_page.label = tk.Label(self.second_frame, text="Previous weight records: ", font=('Ariel', 20))
+        self.entries_page.label.grid(row=4, column=0, padx=10, pady=10, sticky="ew")
+        #self.entries_page.label.grid
 
         self.print_indvidual_entry_record() 
 
         #Buttons to Exit
-        self.entries_page.buttonClose=Button(self.entries_page, text="Exit", command=self.entries_page.destroy)
-        self.entries_page.buttonClose.grid(row=7, column=5, padx=10, pady=10, sticky="ew")      
-        self.entries_page.buttonClose.grid   
+        #self.entries_page.buttonClose=Button(self.entries_page, text="Exit", command=self.entries_page.destroy)
+        #self.entries_page.buttonClose.grid(row=7, column=5, padx=10, pady=10, sticky="ew")      
+        #self.entries_page.buttonClose.grid   
         
 
         '''def some_widget(self):
@@ -349,9 +428,23 @@ class puppy_project(tk.Tk):
         resized =  img.resize((325, 300)) #you should resize based on the aspect ratio / 2
         self.new_image_list.append(ImageTk.PhotoImage(resized))
 
-        self.entries_page.label = tk.Label(self.entries_page, image=self.new_image_list)
-        self.entries_page.label.grid(row=0, column=5, padx=10, pady=10, sticky="e")
-        self.entries_page.label.grid
+        self.main_frame.label = tk.Label(self.main_frame, image=self.new_image_list)
+        self.main_frame.label.grid(row=0, column=1, columnspan=5, rowspan=5, padx=10, pady=10, sticky="e")
+        self.main_frame.label.grid
+
+    def OLDget_puppy_profile_image(self):
+
+        self.new_image_list = []
+
+        puppyImage = (self.df["Profile Image"].loc[int(self.clickedyou)])
+
+        img = Image.open(puppyImage)
+        resized =  img.resize((325, 300)) #you should resize based on the aspect ratio / 2
+        self.new_image_list.append(ImageTk.PhotoImage(resized))
+
+        self.entries_page.label = tk.Label(self.second_frame, image=self.new_image_list)
+        self.entries_page.label.grid(row=0, column=5, sticky="e")
+        #self.entries_page.label.grid
 
     #Read PetProfile csv file
     def read_pet_profile_file(self, petProfileCSV=puppy_profile_file):
@@ -457,39 +550,47 @@ class puppy_project(tk.Tk):
     def print_indvidual_entry_record(self):
 
         self.weightImage = []
+        rowcounter = 5
+        columncounter = 0
 
-        for x in range(len(self.readFile)):
-                       
+        for x in range(0, len(self.readFile)):  
+            #print("BEGINNING: " + str(rowcounter))
+            if((x % 5)==0) and (x != 0):
+                columncounter = 0
+                rowcounter +=5
             weightpuppyImage = (self.readFile["Image"].loc[x])           
             dateofEntryRecord = (self.readFile["DateofEntry"].loc[x])
             weightRecord = (self.readFile["Weight"].loc[x])
             comment = (self.readFile["Comment"].loc[x])
 
+            print("index "  + str(x))
+            print ("******************Column Counter: " + str(columncounter))
+            print("*******************Rowcounter " + str(rowcounter))
+
             myimg = Image.open(weightpuppyImage)
             imgresized =  myimg.resize((150, 200)) #you should resize based on the aspect ratio / 2
             self.weightImage.append(ImageTk.PhotoImage(imgresized))
-
-            self.entries_page.label = tk.Label(self.entries_page, image=self.weightImage[x])
-            self.entries_page.label.grid(row=6, column=x, padx=10, pady=10, sticky="e")
+            self.entries_page.label = tk.Label(self.second_frame, image=self.weightImage[x])
+            self.entries_page.label.grid(row=rowcounter+0, column=columncounter, columnspan=1, padx=10, pady=10, sticky="e")
             self.entries_page.label.grid
 
-            self.entries_page.label = tk.Label(self.entries_page, text='Date of Entry:' + dateofEntryRecord)
-            self.entries_page.label.grid(row=7, column=x, padx=10, pady=10, sticky="e")
+            self.entries_page.label = tk.Label(self.second_frame, text='Date of Entry: ' + dateofEntryRecord)
+            self.entries_page.label.grid(row=rowcounter+1, column=columncounter, columnspan=1, padx=10, pady=10, sticky="e")
             self.entries_page.label.grid
 
-            self.entries_page.label = tk.Label(self.entries_page, text='Weight Record: ' + str(weightRecord))
-            self.entries_page.label.grid(row=8, column=x, padx=10, pady=10, sticky="e")
+            self.entries_page.label = tk.Label(self.second_frame, text='Weight Record: ' + str(weightRecord))
+            self.entries_page.label.grid(row=rowcounter+2, column=columncounter, columnspan=1, padx=10, pady=10, sticky="e")
             self.entries_page.label.grid    
 
-            self.entries_page.label = tk.Label(self.entries_page, text='Comment: ' + comment)
-            self.entries_page.label.grid(row=9, column=x, padx=10, pady=10, sticky="e")
+            self.entries_page.label = tk.Label(self.second_frame, text='Comment: ' + comment)
+            self.entries_page.label.grid(row=rowcounter+3, column=columncounter, columnspan=1, padx=10, pady=10, sticky="e")
             self.entries_page.label.grid
-            
 
-            #self.picButton = Button(self, image=self.image_list[x], command=lambda t=x: self.whichfile(t))
-            # Create an Entry Widget with a specific width (e.g., 30 characters)
-            self.entries_page.btnOpen=Button(self.entries_page, text="Delete this record:", command=lambda m=x: self.delete_weight_row_from_file(m))
-            self.entries_page.btnOpen.grid(row=10, column=x, padx=10, pady=10, sticky="ew")  
+            self.entries_page.btnOpen=Button(self.second_frame, text="Delete this record:", command=lambda m=x: self.delete_weight_row_from_file(m))
+            self.entries_page.btnOpen.grid(row=rowcounter+4, column=columncounter, columnspan=1, padx=10, pady=10, sticky="ew")  
+            columncounter = columncounter+1
+            print ("Column Counter at END: " + str(columncounter))
+            print("Rowcounter " + str(rowcounter))
 
     # Delete row from weight file
     def delete_weight_row_from_file(self, delete_weight):
@@ -602,5 +703,5 @@ class puppy_project(tk.Tk):
             print(f"CSV file '{csv_file}' does not exist.")
 
 
-app=puppy_project()
+app=puppy_project()#
 app.mainloop()
