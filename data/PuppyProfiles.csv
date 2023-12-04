@@ -2,7 +2,4 @@ PetID,Pets Name,Date of Birth,Breed,Profile Image,csvFile
 0,Dutton,2/24/2023,Schnauzer,images\puppy1.jpg,data\Dutton.csv
 1,Max,5/18/2021,Poodle,images\puppy3.jpg,data\max.csv
 2,Oliver,12/6/2022,St. Bernard,images\puppy4.jpg,data\Oliver.csv
-3,Buster,12/6/2022,St. Bernard,images\puppy2.jpg,data\Buster.csv
-4,Oliver,12/6/2022,St. Bernard,images\puppy5.jpg,data\Oliver.csv
-5,Buster,12/6/2022,St. Bernard,images\puppy8.jpg,data\Buster.csv
-6,Potato,10/1/2023,test,images\puppy1.jpg,data\Potato.csv
+3,Coco,12/6/2022,test,images\Screenshot 2023-10-24 201920.png,data\Coco.csv

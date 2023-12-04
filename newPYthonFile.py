@@ -117,6 +117,10 @@ class puppy_project(tk.Tk):
                 writer.writerow(user_data)
                 
             print("User data added successfully.")
+            self.submitted_message = tk.Label(self.pet_page, text="Pet was successfully added!" , font=('Ariel', 20))
+            self.submitted_message.grid(row=5, column=1, padx=10, pady=10, sticky="e")
+            self.submitted_message.grid
+
         except Exception as e:
             print(f"An error occurred: {e}")
 
@@ -183,6 +187,10 @@ class puppy_project(tk.Tk):
         self.pet_image_btnOpen= tk.Button(self.pet_page, text="Upload Puppy Image", command=self.upload_file)
         self.pet_image_btnOpen.grid(row=4, column=1, padx=10, pady=10, sticky="ew")
 
+        self.submit = tk.Label(self.pet_page, text="You must click 'Submit'" , font=('Ariel', 20))
+        self.submit.grid(row=5, column=1, padx=10, pady=10, sticky="e")
+        self.submit.grid
+
         # Create a Submit Button and place it on the right (column 2)
         self.submit_btnOpen= tk.Button(self.pet_page, text="Submit", command=self.add_new_pet)
         self.submit_btnOpen.grid(row=5, column=3, padx=10, pady=10, sticky="ew")    
@@ -213,15 +221,15 @@ class puppy_project(tk.Tk):
         self.row_combobox = ttk.Combobox(self.delete_pet, values=options, state='readonly')
         self.row_combobox.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
         
-        #self.selected_value = self.row_combobox.get()
-
         # Create a button to update the label
         self.update_button = tk.Button(self.delete_pet, text="DELETE PET", command=self.delete_pet_row_from_file)
         self.update_button.grid(row=3, column=1, padx=10, pady=10, sticky="ew") 
+        self.update_button.grid
 
         #Buttons to Cancel
         self.delete_pet_buttonClose= tk.Button(self.delete_pet, text="Cancel", command=self.delete_pet.destroy)
         self.delete_pet_buttonClose.grid(row=6, column=3, padx=10, pady=10, sticky="ew") 
+        self.delete_pet_buttonClose.grid
 
     # gets dog's profile based on PetID. (Gets dog's profile)
     def get_uniquedogprofile(self):
@@ -378,11 +386,15 @@ class puppy_project(tk.Tk):
             with open(pet_csv_file, mode='a', newline='') as new_pet_csv_file:
                 # Create a CSV writer
                 writer = csv.writer(new_pet_csv_file)
-                print('1')
                 # Write the user data to the CSV file
                 writer.writerow(weight_user_data)
                 
             print("User data added successfully.")
+            # Show to user the entry was added.
+            self.submit_weight_message=Label(self.new_weight, text="New weight record submitted.", font=('Ariel', 15))
+            self.submit_weight_message.grid(row=9, column=1, padx=10, pady=20, sticky="ew")    
+            self.submit_weight_message.grid
+            
         except Exception as e:
             print(f"An error occurred: {e}")
     
@@ -399,7 +411,7 @@ class puppy_project(tk.Tk):
         self.new_weight_label.grid
         # Create a Label and place it on the left (column 0)
         #Label for Name:
-        self.input_date_label = tk.Label(self.new_weight, text="Date of Entry:") 
+        self.input_date_label = tk.Label(self.new_weight, text="Date of Entry (Example: 02/28/2023):") 
         self.input_date_label.grid(row=2, column=0, padx=10, pady=10, sticky="e")
         self.input_date_label.grid
 
@@ -434,13 +446,10 @@ class puppy_project(tk.Tk):
         self.comment_entry = tk.Entry(self.new_weight, width=30)
         self.comment_entry.grid(row=5, column=1, padx=10, pady=10, sticky="ew")
 
-        # Create a Go Back Button and place it on the right (column 2)
-        self.new_weight.search_button = tk.Button(self.new_weight, text="Go Home:", command=self.homepage)
-        self.new_weight.search_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")    
-
         # Create a Submit Button and place it on the right (column 2)
         self.submit_btnOpen=Button(self.new_weight, text="Submit", command=self.new_weight_record)
         self.submit_btnOpen.grid(row=8, column=1, padx=10, pady=20, sticky="ew")    
+        self.submit_btnOpen.grid
 
         #Buttons to Exit
         self.new_weight.buttonClose=Button(self.new_weight, text="Exit", command=self.destroy)
@@ -591,6 +600,11 @@ class puppy_project(tk.Tk):
         #Save the updated DataFrame back to the CSV file
         self.df.to_csv(file, index=False)
         print('file successfully deleted')
+
+        #Text to show it was deleted
+        self.delete_pet_message= tk.Label(self.delete_pet, text="Pet was successfully deleted!", font=('Ariel', 15))
+        self.delete_pet_message.grid(row=6, column=1, padx=10, pady=10, sticky="ew") 
+        self.delete_pet_message.grid
  
     # Deletes csv file when pet is deleted
     def delete_csv_file(self, csv_file):
