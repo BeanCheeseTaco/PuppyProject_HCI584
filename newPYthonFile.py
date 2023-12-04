@@ -157,7 +157,7 @@ class puppy_project(tk.Tk):
         self.pet_name_entry.grid(row=1, column=1, padx=10, pady=10, sticky="ew") 
        
         #Label for DOB:
-        self.DOB_label = tk.Label(self.pet_page, text="Date of Birth:")
+        self.DOB_label = tk.Label(self.pet_page, text="Date of Birth (Example: 02/28/2023):")
         self.DOB_label.grid(row=2, column=0, padx=10, pady=10, sticky="e")
         self.DOB_label.grid
 
