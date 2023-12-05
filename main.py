@@ -485,10 +485,11 @@ class puppy_project(tk.Tk):
         self.new_weight.buttonClose.grid(row=0, column=3, padx=10, pady=10, sticky="ew")
 
     #Adds new row to file for new pet weight record
+    # TODO Currently, if the file is blank, e.g. a new pet is added, the weightID is not incremented by 1 as it doesn't have a starting point to increment from.
     def new_weight_record(self):
         ''' create a new list called weight_user_data to add the new weight records to for the pet selected in the home page.'''
 
-        weightID = self.readFile['WeightID'].max() + 1 #get the max weightiD and increment by 1. 
+        weightID = self.readFile['WeightID'].max() + 1 #get the max weightiD and increment by 1. Currently not incrementing if no weight records exist. 
         pet_csv_file = self.pupCSVPath #get the csvpath for where to store.
         input_date = self.input_date_entry.get() #get the date input by the user.
         weight = self.weight_entry.get() #get the weight input by the user.
@@ -603,5 +604,5 @@ class puppy_project(tk.Tk):
         self.entries_page.label.grid(row=4, column=0, padx=10, pady=10, sticky="ew")
 
 
-app=puppy_project()
+app=puppy_project()#
 app.mainloop()
